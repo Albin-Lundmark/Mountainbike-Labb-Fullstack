@@ -11,18 +11,18 @@ const sqlite3_1 = __importDefault(require("sqlite3"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const db = new sqlite3_1.default.Database(path_1.default.resolve(__dirname, 'mountainbikers.sqlite'));
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5173;
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.get('/', async (_req, res) => {
-    try {
-        const rows = await db.all('SELECT * FROM products');
+app.get('/products', (_req, res) => {
+    db.all('SELECT * FROM products', (err, rows) => {
+        if (err) {
+            console.error(`Something went wrong with your request: ${err.message}`);
+            res.status(500).send('Database error');
+            return;
+        }
         res.json(rows);
-    }
-    catch (err) {
-        console.error(`Something went wrong with your request: ${err}`);
-        res.status(500).send('Database error');
-    }
+    });
 });
 app.use(express_1.default.static(path_1.default.join(path_1.default.resolve(), 'dist')));
 app.listen(port, () => {
