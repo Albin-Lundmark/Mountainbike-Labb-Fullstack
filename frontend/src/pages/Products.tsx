@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react'
+import ProductCard from '../components/ProductCard'
 import styled from 'styled-components'
-import {
-  Card,
-  CardActions,
-  CardContent,
-  CardMedia,
-  Button,
-  Typography
-} from '@mui/material'
 import axios from 'axios'
 
 interface Product {
@@ -17,7 +10,7 @@ interface Product {
   image: string
 }
 
-const Products = () => {
+const Products: React.FC = () => {
   const [products, setProducts] = useState<Product[]>()
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -29,7 +22,6 @@ const Products = () => {
       )
       setProducts(response.data)
       setLoading(false)
-      console.log(products)
     } catch (err) {
       setError(`Error fetching data: ${err}`)
       setLoading(false)
@@ -52,39 +44,16 @@ const Products = () => {
   return (
     <Div>
       {products ? (
-        <ul>
-          {products.map(
-            (product: {
-              id: number
-              name: string
-              description: string
-              image: string
-            }) => (
-              <Li key={product.id}>
-                <Card key={product.id} sx={{ maxWidth: 500 }}>
-                  <CardMedia
-                    component='img'
-                    alt={`Picture of ${product.name}`}
-                    height='260'
-                    image={product.image}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant='h5' component='div'>
-                      {product.name}
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      {product.description}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size='small'>Share</Button>
-                    <Button size='small'>Learn More</Button>
-                  </CardActions>
-                </Card>
-              </Li>
-            )
-          )}
-        </ul>
+        <div>
+          {products.map((product, index) => (
+            <ProductCard
+              key={index}
+              name={product.name}
+              image={product.image}
+              description={product.description}
+            />
+          ))}
+        </div>
       ) : (
         error
       )}
@@ -97,8 +66,16 @@ export default Products
 const Div = styled.div`
   display: grid;
   place-items: center;
-  grid-template-columns: 1fr 1fr;
-`
-const Li = styled.li`
-  list-style: none;
+  grid-template-columns: 1fr;
+  margin: 1rem;
+
+  @media (min-width: 768px) {
+    //Tablet
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    //Desktop
+    grid-template-columns: repeat(3, 1fr);
+  }
 `

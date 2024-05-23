@@ -23,7 +23,7 @@ app.use(express.json())
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
 
-app.get('/', (_req, res) => {})
+app.get('/home', (_req, res) => {})
 
 app.get('/about', (_req, res) => {})
 

@@ -23,6 +23,7 @@ const App = () => {
       element: <Root />,
       children: [
         { element: <Home />, path: '/' },
+        { element: <Home />, path: '/home' },
         { element: <About />, path: '/about' },
         { element: <Products />, path: '/products' }
       ]
