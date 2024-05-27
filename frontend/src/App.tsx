@@ -4,10 +4,12 @@ import About from './pages/About'
 import Products from './pages/Products'
 import Navbar from './components/Navbar'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import { CssBaseline } from '@mui/material'
 
 const Root = () => {
   return (
     <>
+      <CssBaseline enableColorScheme />
       <Navbar />
       <main>
         <Outlet />

@@ -1,28 +1,19 @@
-import { Sequelize, DataTypes, Model } from 'sequelize'
-
-const sequelize = new Sequelize({
-  dialect: 'sqlite',
-  storage: 'mountainbikers.sqlite'
-})
+import { DataTypes, Model } from 'sequelize'
+import sequelize from '../db'
 
 class User extends Model {
   public id!: number
-  public username!: string
   public email!: string
   public password!: string
-  public created_at!: Date
+  public createdAt!: Date
 }
 
 User.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true
-    },
-    username: {
-      type: DataTypes.STRING(30),
-      allowNull: false
+      primaryKey: true,
+      autoIncrement: true
     },
     email: {
       type: DataTypes.STRING(50),
@@ -55,8 +46,5 @@ User.init(
     timestamps: false
   }
 )
-;(async () => {
-  await sequelize.sync({ alter: true })
-})()
 
 export default User

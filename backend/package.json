@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
+    "sync": "ts-node model/sync.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node index.ts"

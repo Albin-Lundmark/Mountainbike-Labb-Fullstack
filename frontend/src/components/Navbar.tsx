@@ -1,3 +1,5 @@
+import React, { useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import {
   AppBar,
   Box,
@@ -6,18 +8,18 @@ import {
   Typography,
   Menu,
   Container,
-  Avatar,
   Button,
   Tooltip,
   MenuItem
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import SearchIcon from '@mui/icons-material/Search'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import Logo from './Logo'
-import { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
 
 const pages = ['home', 'products', 'about']
-const settings = ['Profile', 'Cart', 'Logout']
+const settings = ['Profile', 'Login']
 
 const Navbar: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
@@ -26,6 +28,7 @@ const Navbar: React.FC = () => {
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
   }
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
   }
@@ -42,32 +45,16 @@ const Navbar: React.FC = () => {
     <AppBar position='sticky'>
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
-          <Typography
-            variant='h6'
-            noWrap
-            component='a'
-            href='/'
-            sx={{
-              mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            <Logo />
-            Mountainbikers
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          {/* Navigation for mobile */}
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
             <IconButton
               size='large'
-              aria-label='account of current user'
+              aria-label='menu'
               aria-controls='menu-appbar'
               aria-haspopup='true'
               onClick={handleOpenNavMenu}
               color='inherit'
+              sx={{ display: { md: 'none' } }}
             >
               <MenuIcon />
             </IconButton>
@@ -75,7 +62,7 @@ const Navbar: React.FC = () => {
               id='menu-appbar'
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
+                vertical: 'top',
                 horizontal: 'left'
               }}
               keepMounted
@@ -91,50 +78,65 @@ const Navbar: React.FC = () => {
             >
               {pages.map(page => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>
-                    <RouterLink to={`/${page}`}>{page}</RouterLink>
+                  <Typography variant='inherit'>
+                    <RouterLink
+                      to={`/${page}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      {page.charAt(0).toUpperCase() + page.slice(1)}
+                    </RouterLink>
                   </Typography>
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
-          <Typography
-            variant='h5'
-            noWrap
-            component='a'
-            href='/'
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            {/* My own logo */}
-            <Logo />
-          </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map(page => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
-              >
-                <RouterLink to={`/${page}`}>{page}</RouterLink>
-              </Button>
-            ))}
+            {/* Logo and site name */}
+            <Typography
+              variant='h6'
+              noWrap
+              component='div'
+              sx={{
+                ml: { md: 2 },
+                flexGrow: 1,
+                letterSpacing: '.3rem',
+                color: 'inherit',
+                textDecoration: 'none'
+              }}
+            >
+              <Logo />
+            </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          {/* Navigation for desktop */}
+          <Box sx={{ display: 'flex' }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              {pages.map(page => (
+                <Button
+                  key={page}
+                  sx={{ mx: 1, color: 'white' }}
+                  component={RouterLink}
+                  to={`/${page}`}
+                >
+                  {page.charAt(0).toUpperCase() + page.slice(1)}
+                </Button>
+              ))}
+            </Box>
+
+            {/* Action buttons */}
+            <IconButton sx={{ mx: 1, color: 'white' }}>
+              <SearchIcon />
+            </IconButton>
+            <IconButton sx={{ mx: 1, color: 'white' }}>
+              <ShoppingCartIcon />
+            </IconButton>
             <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{ mx: 1, color: 'white' }}
+              >
+                <AccountCircleIcon />
               </IconButton>
             </Tooltip>
+            {/* User settings menu */}
             <Menu
               sx={{ mt: '45px' }}
               id='menu-appbar'

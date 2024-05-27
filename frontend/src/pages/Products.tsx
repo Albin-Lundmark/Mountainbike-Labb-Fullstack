@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
+import { Grid, Box } from '@mui/material'
 import styled from 'styled-components'
 import axios from 'axios'
 
@@ -34,30 +35,43 @@ const Products: React.FC = () => {
   }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <Div>
+        <h1>Loading...</h1>
+      </Div>
+    )
   }
 
   if (error) {
-    return <div>{error}</div>
+    return <Div>{error}</Div>
   }
 
   return (
-    <Div>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        padding: 2
+      }}
+    >
       {products ? (
-        <div>
+        <Grid container spacing={2} sx={{ maxWidth: 1300 }}>
           {products.map((product, index) => (
-            <ProductCard
-              key={index}
-              name={product.name}
-              image={product.image}
-              description={product.description}
-            />
+            <Grid item xs={12} sm={6} md={4} key={index}>
+              <ProductCard
+                name={product.name}
+                image={product.image}
+                description={product.description}
+              />
+            </Grid>
           ))}
-        </div>
+        </Grid>
       ) : (
         error
       )}
-    </Div>
+    </Box>
   )
 }
 
