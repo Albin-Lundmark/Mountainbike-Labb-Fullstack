@@ -28,7 +28,7 @@ const Transition = React.forwardRef(function Transition(
   },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction='right' ref={ref} {...props} />
+  return <Slide direction='left' ref={ref} {...props} />
 })
 
 const LoginModal: React.FC = () => {
@@ -49,15 +49,12 @@ const LoginModal: React.FC = () => {
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
       errors.email = 'Invalid email address'
     }
-
     if (!values.password) {
       errors.password = 'Required'
     }
-
     if (isRegister && values.password !== values.confirmPassword) {
       errors.confirmPassword = 'Passwords must match'
     }
-
     return errors
   }
 
