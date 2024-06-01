@@ -20,6 +20,11 @@ app.use(cors())
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.join(path.resolve(), 'dist/assets')))
+
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(path.resolve(), 'dist/index.html'))
+})
 
 app.get('/', (_req, res) => {
   console.log('API is working')
@@ -132,8 +137,6 @@ app.post('/login', async (req, res) => {
     })
   }
 })
-
-app.use(express.static(path.join(path.resolve(), 'dist')))
 ;(async () => {
   try {
     await sequelize.sync()

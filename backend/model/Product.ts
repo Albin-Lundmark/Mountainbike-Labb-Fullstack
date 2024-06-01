@@ -1,8 +1,6 @@
-// product.model.ts
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
 import Category from './Category'
-import { NOW } from 'sequelize'
 
 class Product extends Model {
   public id!: number
