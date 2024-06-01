@@ -14,9 +14,6 @@ import { Op } from 'sequelize'
 dotenv.config()
 
 const app = express()
-/* const db = new sqlite3.Database(
-  path.resolve(__dirname, 'mountainbikers.sqlite')
-) */
 const port = process.env.PORT || 5173
 
 app.use(cors())
