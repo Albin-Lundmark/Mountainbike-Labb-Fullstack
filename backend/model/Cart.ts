@@ -1,7 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-import User from './User'
-import Product from './Product'
+/* import User from './User'
+import Product from './Product' */
+const User = require('./User')
+const Product = require('./Product')
 
 class Cart extends Model {
   public id!: number

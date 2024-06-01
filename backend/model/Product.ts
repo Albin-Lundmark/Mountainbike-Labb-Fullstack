@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-import Category from './Category'
+/* import Category from './Category' */
+const Category = require('./Category')
 
 class Product extends Model {
   public id!: number
