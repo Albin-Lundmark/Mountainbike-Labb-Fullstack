@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
+    "build-backend": "tsc",
     "build-frontend": "npm run --prefix ../frontend build && rm -Rf dist && mv ../frontend/dist .",
     "sync": "ts-node model/sync.ts",
     "server": "nodemon index.ts",
-    "build": "tsc",
+    "build": "npm run build-frontend && npm run build-backend",
     "start": "node dist/index.js",
     "dev": "ts-node index.ts"
   },

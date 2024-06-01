@@ -20,15 +20,11 @@ app.use(cors())
 app.use(express.json())
 app.use(bodyParser.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static(path.join(path.resolve(), 'dist/assets')))
-
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(path.resolve(), 'dist/index.html'))
-})
+app.use(express.static(path.join(path.resolve(), 'dist')))
 
 app.get('/', (_req, res) => {
   console.log('API is working')
-  res.send()
+  res.sendFile(path.join(path.resolve(), 'dist', 'index.html'))
 })
 
 app.get('/home', (_req, res) => {
