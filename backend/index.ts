@@ -4,10 +4,14 @@ import dotenv from 'dotenv'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
-import User from './model/User'
+const User = require('./model/User')
+const Product = require('./model/Product')
+const Category = require('./model/Category')
+const Cart = require('./model/Cart')
+/* import User from './model/User'
 import Product from './model/Product'
 import Category from './model/Category'
-import Cart from './model/Cart'
+import Cart from './model/Cart' */
 import sequelize from './db'
 import { Op } from 'sequelize'
 
