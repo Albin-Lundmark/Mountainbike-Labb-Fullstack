@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
-import { Grid, Box, Checkbox, FormControlLabel } from '@mui/material'
+import { Grid, Box, FormControlLabel } from '@mui/material'
 import styled from 'styled-components'
 import axios from 'axios'
 
@@ -24,19 +24,33 @@ const Products: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const [selectedCategories, setSelectedCategories] = useState<number[]>([])
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get<Category[]>('/categories')
-        setCategories(response.data)
-        console.log(categories)
-      } catch (err) {
-        console.error('Error fetching categories:', err)
-      }
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get<Category[]>(
+        'http://localhost:8080/categories'
+      )
+      setCategories(response.data)
+    } catch (err) {
+      console.error('Error fetching categories:', err)
     }
+  }
 
-    fetchCategories()
-  }, [])
+  const fetchProducts = async () => {
+    try {
+      const query = selectedCategories.length
+        ? `?categories=${selectedCategories.join(',')}`
+        : ''
+      const response = await axios.get<Product[]>(
+        `http://localhost:8080/products${query}`
+      )
+      setProducts(response.data)
+      setLoading(false)
+    } catch (err) {
+      setError(`Error fetching data: ${err}`)
+      setLoading(false)
+      console.error(err)
+    }
+  }
 
   const handleSelCat = (categoryId: number) => {
     setSelectedCategories(prev =>
@@ -46,20 +60,9 @@ const Products: React.FC = () => {
     )
   }
 
-  const fetchProducts = async () => {
-    try {
-      const query = selectedCategories.length
-        ? `?categories=${selectedCategories.join(',')}`
-        : ''
-      const response = await axios.get<Product[]>(`/products${query}`)
-      setProducts(response.data)
-      setLoading(false)
-    } catch (err) {
-      setError(`Error fetching data: ${err}`)
-      setLoading(false)
-      console.error(err)
-    }
-  }
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   useEffect(() => {
     fetchProducts()
@@ -74,31 +77,42 @@ const Products: React.FC = () => {
   }
 
   if (error) {
-    return <Div>{error}</Div>
+    return (
+      <Div>
+        <h1>{error}</h1>
+      </Div>
+    )
   }
 
   return (
     <>
-      <Box>
-        {categories.map(category => (
-          <FormControlLabel
-            key={category.id}
-            control={
-              <HiddenCheckbox
-                checked={selectedCategories.includes(category.id)}
-                onChange={() => handleSelCat(category.id)}
-              />
-            }
-            label={
-              <Label
-                selected={selectedCategories.includes(category.id)}
-                onClick={() => handleSelCat(category.id)}
-              >
-                {category.name}
-              </Label>
-            }
-          />
-        ))}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
+      >
+        {categories &&
+          categories.map(category => (
+            <FormControlLabel
+              key={category.id}
+              control={
+                <HiddenCheckbox
+                  checked={selectedCategories.includes(category.id)}
+                  onChange={() => handleSelCat(category.id)}
+                />
+              }
+              label={
+                <Label
+                  selected={selectedCategories.includes(category.id)}
+                  onClick={() => handleSelCat(category.id)}
+                >
+                  {category.name}
+                </Label>
+              }
+            />
+          ))}
       </Box>
       <Box
         sx={{
@@ -122,7 +136,9 @@ const Products: React.FC = () => {
             ))}
           </Grid>
         ) : (
-          error
+          <Div>
+            <h1>{error}</h1>
+          </Div>
         )}
       </Box>
     </>
@@ -148,12 +164,11 @@ const Div = styled.div`
   }
 `
 
-const HiddenCheckbox = styled(Checkbox)`
+const HiddenCheckbox = styled.input`
   display: none;
-  color: yellow;
 `
 
 const Label = styled.span<{ selected: boolean }>`
   cursor: pointer;
-  color: ${({ selected }) => (selected ? 'blue' : 'black')};
+  color: ${({ selected }) => (selected ? 'blue' : 'white')};
 `

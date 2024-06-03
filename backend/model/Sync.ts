@@ -1,8 +1,8 @@
 import sequelize from '../db'
-import '../model/User'
-import '../model/Product'
-import '../model/Category'
-import '../model/Cart'
+import './Cart'
+import './Product'
+import './Category'
+import './User'
 
 const syncDatabase = async () => {
   try {

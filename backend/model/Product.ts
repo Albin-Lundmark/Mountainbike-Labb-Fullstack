@@ -1,7 +1,6 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
 import Category from './Category'
-/* const Category = require('./Category') */
 
 class Product extends Model {
   public id!: number
@@ -34,7 +33,7 @@ Product.init(
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: true,
       defaultValue: 'This bike is missing a description for now.'
     },
     price: {
@@ -43,25 +42,11 @@ Product.init(
     },
     created_at: {
       type: DataTypes.DATE,
-      defaultValue: () => {
-        const now = new Date()
-
-        const year = now.getFullYear()
-        const month = String(now.getMonth() + 1).padStart(2, '0')
-        const day = String(now.getDate()).padStart(2, '0')
-        const hour = String(now.getHours()).padStart(2, '0')
-        const minute = String(now.getMinutes()).padStart(2, '0')
-
-        return `${year}-${month}-${day} ${hour}:${minute}`
-      }
+      defaultValue: DataTypes.NOW
     },
     category_id: {
       type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: Category,
-        key: 'id'
-      }
+      allowNull: false
     }
   },
   {

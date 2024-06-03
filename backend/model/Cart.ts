@@ -2,8 +2,6 @@ import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
 import User from './User'
 import Product from './Product'
-/* const User = require('./User')
-const Product = require('./Product') */
 
 class Cart extends Model {
   public id!: number
@@ -26,19 +24,11 @@ Cart.init(
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: User,
-        key: 'id'
-      }
+      allowNull: false
     },
     product_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: Product,
-        key: 'id'
-      }
+      allowNull: false
     },
     quantity: {
       type: DataTypes.INTEGER,

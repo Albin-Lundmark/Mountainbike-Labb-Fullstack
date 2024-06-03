@@ -35,11 +35,13 @@ app.get('/home', (_req, res) => {
   res.send()
 })
 
-app.get('/about', (_req, res) => {})
+app.get('/about', (_req, res) => {
+  res.send()
+})
 
-app.get('/categories', async (req, res) => {
+app.get('/categories', async (_req, res) => {
   try {
-    const categories = Category.findAll()
+    const categories = await Category.findAll()
     res.json(categories)
   } catch (error) {
     console.error('Error fetching categories:', error)
