@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import { useMediaQuery, createTheme, ThemeProvider } from '@mui/material'
+import { useMediaQuery, createTheme } from '@mui/material'
 
 const theme = createTheme()
 
@@ -23,20 +23,18 @@ const Hero: React.FC = () => {
   }
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container>
-        <Grid item xs={12}>
-          <img
-            src={imageUrl}
-            alt='Hero'
-            style={{
-              width: '100%',
-              height: 'auto'
-            }}
-          />
-        </Grid>
+    <Grid container>
+      <Grid item xs={12}>
+        <img
+          src={imageUrl}
+          alt='Hero'
+          style={{
+            width: '100%',
+            height: 'auto'
+          }}
+        />
       </Grid>
-    </ThemeProvider>
+    </Grid>
   )
 }
 

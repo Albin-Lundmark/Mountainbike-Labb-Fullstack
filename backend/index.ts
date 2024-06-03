@@ -4,14 +4,14 @@ import dotenv from 'dotenv'
 import path from 'path'
 import jwt from 'jsonwebtoken'
 import bodyParser from 'body-parser'
-const User = require('./model/User')
-const Product = require('./model/Product')
-const Category = require('./model/Category')
-const Cart = require('./model/Cart')
-/* import User from './model/User'
+import User from './model/User'
 import Product from './model/Product'
 import Category from './model/Category'
-import Cart from './model/Cart' */
+import Cart from './model/Cart'
+/* const User = require('./model/User')
+const Product = require('./model/Product')
+const Category = require('./model/Category')
+const Cart = require('./model/Cart') */
 import sequelize from './db'
 import { Op } from 'sequelize'
 
@@ -37,9 +37,26 @@ app.get('/home', (_req, res) => {
 
 app.get('/about', (_req, res) => {})
 
-app.get('/products', async (_req, res) => {
+app.get('/categories', async (req, res) => {
   try {
-    const products = await Product.findAll()
+    const categories = Category.findAll()
+    res.json(categories)
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+    res.status(500).json({ message: 'Error fetching categories', error })
+  }
+})
+
+app.get('/products', async (req, res) => {
+  try {
+    const sortByCategory = req.query.categories
+      ? (req.query.categories as string).split(',').map(Number)
+      : []
+    const whereClause = sortByCategory.length
+      ? { category_id: sortByCategory }
+      : {}
+
+    const products = await Product.findAll({ where: whereClause })
     res.json(products)
   } catch (error) {
     console.error('Error fetching products:', error)

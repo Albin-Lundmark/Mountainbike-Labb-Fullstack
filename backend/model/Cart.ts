@@ -1,19 +1,19 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-/* import User from './User'
-import Product from './Product' */
-const User = require('./User')
-const Product = require('./Product')
+import User from './User'
+import Product from './Product'
+/* const User = require('./User')
+const Product = require('./Product') */
 
 class Cart extends Model {
   public id!: number
-  public userId!: number
-  public productId!: number
+  public user_id!: number
+  public product_id!: number
   public quantity!: number
 
   static associate(models: any) {
-    Cart.belongsTo(models.User, { foreignKey: 'userId' })
-    Cart.belongsTo(models.Product, { foreignKey: 'productId' })
+    Cart.belongsTo(models.User, { foreignKey: 'user_id' })
+    Cart.belongsTo(models.Product, { foreignKey: 'product_id' })
   }
 }
 
@@ -24,7 +24,7 @@ Cart.init(
       primaryKey: true,
       autoIncrement: true
     },
-    userId: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -32,7 +32,7 @@ Cart.init(
         key: 'id'
       }
     },
-    productId: {
+    product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {

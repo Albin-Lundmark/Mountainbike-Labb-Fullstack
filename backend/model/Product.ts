@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-/* import Category from './Category' */
-const Category = require('./Category')
+import Category from './Category'
+/* const Category = require('./Category') */
 
 class Product extends Model {
   public id!: number
@@ -9,11 +9,11 @@ class Product extends Model {
   public image!: string
   public description!: string | null
   public price!: number
-  public createdAt!: Date
-  public categoryId!: number
+  public created_at!: Date
+  public category_id!: number
 
   static associate(models: any) {
-    Product.belongsTo(models.Category, { foreignKey: 'categoryId' })
+    Product.belongsTo(models.Category, { foreignKey: 'category_id' })
   }
 }
 

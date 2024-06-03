@@ -63,13 +63,10 @@ const LoginModal: React.FC = () => {
     { setSubmitting, setErrors }: FormikHelpers<AuthValues>
   ) => {
     try {
-      const response = await axios.post<LoginResponse>(
-        'http://localhost:8080/login',
-        {
-          email: values.email,
-          password: values.password
-        }
-      )
+      const response = await axios.post<LoginResponse>('/login', {
+        email: values.email,
+        password: values.password
+      })
       localStorage.setItem('token', response.data.token)
       setIsLoggedIn(true)
       setOpen(false)
@@ -88,13 +85,10 @@ const LoginModal: React.FC = () => {
     { setSubmitting, setErrors }: FormikHelpers<AuthValues>
   ) => {
     try {
-      const response = await axios.post<LoginResponse>(
-        'http://localhost:8080/register',
-        {
-          email: values.email,
-          password: values.password
-        }
-      )
+      const response = await axios.post<LoginResponse>('/register', {
+        email: values.email,
+        password: values.password
+      })
       localStorage.setItem('token', response.data.token)
       setIsLoggedIn(true)
       setOpen(false)
