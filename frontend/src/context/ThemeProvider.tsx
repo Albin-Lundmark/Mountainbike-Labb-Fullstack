@@ -1,16 +1,20 @@
+// CustomThemeProvider.tsx
 import * as React from 'react'
 import {
   createTheme,
   responsiveFontSizes,
-  ThemeProvider as MuiThemeProvider
+  ThemeProvider
 } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import ThemeContext from './ThemeContext'
+import { useMediaQuery } from '@mui/material'
 
 const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const [prefersDarkMode, setPrefersDarkMode] = React.useState(false)
+  const prefersSystemDark = useMediaQuery('(prefers-color-scheme: dark)')
+  const [prefersDarkMode, setPrefersDarkMode] =
+    React.useState(prefersSystemDark)
 
   const theme = React.useMemo(() => {
     let theme = createTheme({
@@ -40,10 +44,10 @@ const CustomThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <ThemeContext.Provider value={{ prefersDarkMode, toggleTheme }}>
-      <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}
-      </MuiThemeProvider>
+      </ThemeProvider>
     </ThemeContext.Provider>
   )
 }

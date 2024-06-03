@@ -108,7 +108,8 @@ const Products: React.FC = () => {
                   selected={selectedCategories.includes(category.id)}
                   onClick={() => handleSelCat(category.id)}
                 >
-                  {category.name}
+                  {category.name.charAt(0).toUpperCase() +
+                    category.name.slice(1)}
                 </Label>
               }
             />
@@ -170,5 +171,5 @@ const HiddenCheckbox = styled.input`
 
 const Label = styled.span<{ selected: boolean }>`
   cursor: pointer;
-  color: ${({ selected }) => (selected ? 'blue' : 'white')};
+  color: ${({ selected }) => (selected ? 'blue' : 'green')};
 `

@@ -7,14 +7,14 @@ const Toggledarkmode: React.FC = () => {
   const { prefersDarkMode, toggleTheme } = useThemeContext()
 
   return (
-    <div>
+    <>
       <IconButton onClick={toggleTheme} color='inherit'>
         {prefersDarkMode ? <Brightness7 /> : <Brightness2 />}
         <Typography variant='caption'>
           {prefersDarkMode ? 'Light Mode' : 'Dark Mode'}
         </Typography>
       </IconButton>
-    </div>
+    </>
   )
 }
 
