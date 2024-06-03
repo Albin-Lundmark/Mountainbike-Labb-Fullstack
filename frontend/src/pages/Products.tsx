@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import ProductCard from '../components/ProductCard'
-import { Grid, Box, FormControlLabel } from '@mui/material'
+import { Grid, Box, Chip } from '@mui/material'
 import styled from 'styled-components'
 import axios from 'axios'
 
@@ -93,27 +93,27 @@ const Products: React.FC = () => {
           alignItems: 'center'
         }}
       >
-        {categories &&
-          categories.map(category => (
-            <FormControlLabel
-              key={category.id}
-              control={
-                <HiddenCheckbox
-                  checked={selectedCategories.includes(category.id)}
-                  onChange={() => handleSelCat(category.id)}
-                />
-              }
-              label={
-                <Label
-                  selected={selectedCategories.includes(category.id)}
-                  onClick={() => handleSelCat(category.id)}
-                >
-                  {category.name.charAt(0).toUpperCase() +
-                    category.name.slice(1)}
-                </Label>
-              }
-            />
-          ))}
+        {categories.map(category => (
+          <Chip
+            key={category.id}
+            label={
+              category.name.charAt(0).toUpperCase() + category.name.slice(1)
+            }
+            onClick={() => handleSelCat(category.id)}
+            variant={
+              selectedCategories.includes(category.id) ? 'outlined' : 'filled'
+            }
+            color={
+              selectedCategories.includes(category.id) ? 'primary' : 'default'
+            }
+            sx={{
+              fontSize: '1rem',
+              cursor: 'pointer',
+              marginRight: 1,
+              marginTop: 1
+            }}
+          />
+        ))}
       </Box>
       <Box
         sx={{
@@ -163,13 +163,4 @@ const Div = styled.div`
     //Desktop
     grid-template-columns: repeat(3, 1fr);
   }
-`
-
-const HiddenCheckbox = styled.input`
-  display: none;
-`
-
-const Label = styled.span<{ selected: boolean }>`
-  cursor: pointer;
-  color: ${({ selected }) => (selected ? 'blue' : 'green')};
 `
