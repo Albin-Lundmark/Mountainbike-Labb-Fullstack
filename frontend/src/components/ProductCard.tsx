@@ -39,6 +39,7 @@ const ProductCard: React.FC<CardProps> = ({
     const endpoint = token
       ? 'http://localhost:8080/cart/auth'
       : 'http://localhost:8080/cart/guest'
+
     const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
     try {

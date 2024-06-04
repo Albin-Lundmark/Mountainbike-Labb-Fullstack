@@ -1,12 +1,15 @@
 import logo from '/logo/Mountainbikers-logo.png'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 const Logo: React.FC = () => {
   return (
-    <Div>
-      <img src={logo} alt='Mountainbikers Logotype' />
-      <p>Mountainbikers</p>
-    </Div>
+    <Link to={'/home'} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Div>
+        <img src={logo} alt='Mountainbikers Logotype' />
+        <p>Mountainbikers</p>
+      </Div>
+    </Link>
   )
 }
 

@@ -6,6 +6,7 @@ class Cart extends Model {
   public user_id!: number
   public product_id!: number
   public quantity!: number
+  public total_price!: number
 }
 
 Cart.init(
@@ -26,6 +27,11 @@ Cart.init(
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    total_price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0.0
     }
   },
   {

@@ -106,6 +106,7 @@ const Navbar: React.FC = () => {
                   </MenuItem>
                 ))}
                 <Toggledarkmode />
+                {/* Make sure to move to a better location */}
               </Menu>
               {/* Logo and site name */}
               <Typography
@@ -176,6 +177,7 @@ const Navbar: React.FC = () => {
                   </MenuItem>
                 ))}
                 <Toggledarkmode />
+                {/* Make sure to move this button to a better location */}
               </Menu>
             </Box>
           </Toolbar>

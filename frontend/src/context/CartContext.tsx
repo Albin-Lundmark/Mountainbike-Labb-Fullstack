@@ -2,8 +2,10 @@ import React, { createContext, useState, ReactNode } from 'react'
 
 interface CartItem {
   id: number
+  name: string
   product_id: number
   quantity: number
+  price: number
 }
 
 interface CartContextType {

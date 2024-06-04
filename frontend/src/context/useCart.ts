@@ -3,8 +3,10 @@ import { CartContext } from './CartContext'
 
 interface CartItem {
   id: number
+  name: string
   product_id: number
   quantity: number
+  price: number
 }
 
 interface CartContextType {
