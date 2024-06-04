@@ -125,6 +125,12 @@ const LoginModal: React.FC = () => {
             variant='contained'
             color='primary'
             onClick={() => setOpen(true)}
+            sx={{
+              position: 'absolute',
+              top: '7vh',
+              left: '3vw',
+              cursor: 'pointer'
+            }}
           >
             Login/Register
           </Button>

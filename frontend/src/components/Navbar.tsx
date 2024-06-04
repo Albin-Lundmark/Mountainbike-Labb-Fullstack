@@ -146,6 +146,8 @@ const Navbar: React.FC = () => {
               </IconButton>
               <CartIcon />
               <LoginModal />
+              <Toggledarkmode />
+              {/* Make sure to move this button to a better location */}
               <Tooltip title='User menu'>
                 <IconButton
                   onClick={handleOpenUserMenu}
@@ -176,8 +178,6 @@ const Navbar: React.FC = () => {
                     <Typography textAlign='center'>{setting}</Typography>
                   </MenuItem>
                 ))}
-                <Toggledarkmode />
-                {/* Make sure to move this button to a better location */}
               </Menu>
             </Box>
           </Toolbar>
