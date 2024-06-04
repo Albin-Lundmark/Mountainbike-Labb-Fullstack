@@ -50,7 +50,7 @@ const LoginModal: React.FC = () => {
       errors.email = 'Invalid email address'
     }
     if (!values.password) {
-      errors.password = 'Required'
+      errors.password = 'Password is required'
     }
     if (isRegister && values.password !== values.confirmPassword) {
       errors.confirmPassword = 'Passwords must match'
@@ -63,10 +63,13 @@ const LoginModal: React.FC = () => {
     { setSubmitting, setErrors }: FormikHelpers<AuthValues>
   ) => {
     try {
-      const response = await axios.post<LoginResponse>('/login', {
-        email: values.email,
-        password: values.password
-      })
+      const response = await axios.post<LoginResponse>(
+        'http://localhost:8080/login',
+        {
+          email: values.email,
+          password: values.password
+        }
+      )
       localStorage.setItem('token', response.data.token)
       setIsLoggedIn(true)
       setOpen(false)
@@ -85,16 +88,20 @@ const LoginModal: React.FC = () => {
     { setSubmitting, setErrors }: FormikHelpers<AuthValues>
   ) => {
     try {
-      const response = await axios.post<LoginResponse>('/register', {
-        email: values.email,
-        password: values.password
-      })
+      const response = await axios.post<LoginResponse>(
+        'http://localhost:8080/register',
+        {
+          email: values.email,
+          password: values.password
+        }
+      )
       localStorage.setItem('token', response.data.token)
       setIsLoggedIn(true)
       setOpen(false)
     } catch (err) {
       setErrors({
-        password: 'Something went wrong with the registration, please try again'
+        email: 'Email might not be valid',
+        password: 'Password might not be valid, please try again'
       })
     } finally {
       setSubmitting(false)
@@ -111,9 +118,9 @@ const LoginModal: React.FC = () => {
   }
 
   return (
-    <div>
+    <>
       {!isLoggedIn ? (
-        <div>
+        <>
           <Button
             variant='contained'
             color='primary'
@@ -210,7 +217,7 @@ const LoginModal: React.FC = () => {
               </Formik>
             </DialogContent>
           </Dialog>
-        </div>
+        </>
       ) : (
         <div>
           <Button variant='contained' color='secondary' onClick={handleLogout}>
@@ -218,7 +225,7 @@ const LoginModal: React.FC = () => {
           </Button>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

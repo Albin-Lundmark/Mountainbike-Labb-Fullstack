@@ -1,16 +1,11 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-import Cart from './Cart'
 
 class User extends Model {
   public id!: number
   public email!: string
   public password!: string
   public created_at!: Date
-
-  static associate(models: any) {
-    User.hasMany(models.Cart, { foreignKey: 'user_id' })
-  }
 }
 
 User.init(

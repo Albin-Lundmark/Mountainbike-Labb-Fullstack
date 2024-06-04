@@ -14,6 +14,7 @@ const Category = require('./model/Category')
 const Cart = require('./model/Cart') */
 import sequelize from './db'
 import { Op } from 'sequelize'
+import auth from './authenticate/auth'
 
 dotenv.config()
 
@@ -27,12 +28,11 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(path.resolve(), 'dist')))
 
 app.get('/', (_req, res) => {
-  console.log('API is working')
   res.sendFile(path.join(path.resolve(), 'dist', 'index.html'))
 })
 
 app.get('/home', (_req, res) => {
-  res.send()
+  res.sendFile(path.join(path.resolve(), 'dist', 'index.html'))
 })
 
 app.get('/about', (_req, res) => {
@@ -102,33 +102,143 @@ app.get('/products/search/:name', async (req, res) => {
   }
 })
 
+app.get('/cart/:userId', async (req, res) => {
+  const userId = req.params.userId
+  try {
+    const cartItems = await Cart.findAll({
+      where: { user_id: userId },
+      include: [User, Product]
+    })
+    if (cartItems.length === 0) {
+      return res.status(404).json({ message: 'Cart not found' })
+    }
+    res.json(cartItems)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+app.get('/cart/guest', async (req, res) => {
+  try {
+    const cartItems = await Cart.findAll({
+      include: [Product]
+    })
+    if (cartItems.length === 0) {
+      return res.status(404).json({ message: 'Cart not found' })
+    }
+    res.json(cartItems)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+app.post('/cart/guest', async (req, res) => {
+  const { product_id, quantity } = req.body
+
+  if (!product_id || !quantity) {
+    return res
+      .status(400)
+      .json({ message: 'Product ID and quantity are required' })
+  }
+
+  try {
+    const product = await Product.findByPk(product_id)
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
+    }
+
+    const cartItem = { product_id, quantity }
+    res.status(200).json(cartItem)
+  } catch (error) {
+    console.error('Error adding to guest cart:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+interface CustomRequest extends express.Request {
+  user?: { id: number }
+}
+
+app.post('/cart/auth', auth, async (req: CustomRequest, res) => {
+  const { product_id, quantity } = req.body
+  if (!req.user) {
+    return res.status(401).json({ message: 'User not authenticated' })
+  }
+  const user_id = req.user.id
+
+  if (!product_id || !quantity) {
+    return res
+      .status(400)
+      .json({ message: 'Product ID and quantity are required' })
+  }
+
+  try {
+    const product = await Product.findByPk(product_id)
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
+    }
+
+    let cartItem = await Cart.findOne({ where: { user_id, product_id } })
+    if (cartItem) {
+      cartItem.quantity += quantity
+      await cartItem.save()
+    } else {
+      cartItem = await Cart.create({ user_id, product_id, quantity })
+    }
+
+    res.status(200).json(cartItem)
+  } catch (error) {
+    console.error('Error adding to cart:', error)
+    res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+app.get('/checkout', async (req, res) => {
+  res.send()
+})
+
+app.post('/checkout', async (req, res) => {
+  res.send()
+})
+
 app.post('/register', async (req, res) => {
   const { email, password } = req.body
 
   if (!email || !password) {
     return res.status(400).json({
-      msg: 'Please fill out your email and password to register as a mountainbiker'
+      message:
+        'Please fill out your email and password to register as a mountainbiker'
     })
   }
 
   try {
     const user = await User.findOne({ where: { email } })
     if (user) {
-      return res.status(400).json({ msg: 'That email already has an account' })
+      return res
+        .status(400)
+        .json({ message: 'That email already has an account' })
     }
     const newUser = await User.create({
       email,
       password
     })
+    const jwt_secret = process.env.JWT_SECRET
+
+    if (!jwt_secret) {
+      throw new Error('jwt_secret is not defined')
+    }
+
     const token = jwt.sign(
       { id: newUser.id, email: newUser.email },
-      'awesome_mountainbikers_ftw',
+      jwt_secret,
       { expiresIn: '1h' }
     )
-    res.status(201).json({ token, msg: 'User registered with a bang!' })
+    res.status(201).json({ token, message: 'User registered with a bang!' })
   } catch (err) {
     console.error('Could not register that awesome mountainbiker:', err)
-    res.status(500).json({ msg: 'Server error' })
+    res.status(500).json({ message: 'Server error' })
   }
 })
 
@@ -137,13 +247,16 @@ app.post('/login', async (req, res) => {
 
   try {
     const user = await User.findOne({ where: { email, password } })
+    const jwt_secret = process.env.JWT_SECRET
+
+    if (!jwt_secret) {
+      throw new Error('jwt_secret is not defined')
+    }
 
     if (user) {
-      const token = jwt.sign(
-        { id: user.id, email: user.email },
-        'awesome_mountainbikers_ftw',
-        { expiresIn: '1h' }
-      )
+      const token = jwt.sign({ id: user.id, email: user.email }, jwt_secret, {
+        expiresIn: '1h'
+      })
       res.json({ token })
     } else {
       res.status(401).json({ message: 'Invalid email or password' })

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import {
   AppBar,
   Box,
@@ -15,10 +15,11 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import CartIcon from './CartIcon'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import Logo from './Logo'
 import Toggledarkmode from './Toggledarkmode'
+import LoginModal from './LoginModal'
 
 const pages = ['home', 'products', 'about']
 const settings = ['Profile', 'Login']
@@ -74,7 +75,6 @@ const Navbar: React.FC = () => {
               >
                 <MenuIcon />
               </IconButton>
-              <Toggledarkmode />
               <Menu
                 id='menu-appbar'
                 anchorEl={anchorElNav}
@@ -96,15 +96,16 @@ const Navbar: React.FC = () => {
                 {pages.map(page => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
                     <Typography variant='inherit'>
-                      <RouterLink
+                      <Link
                         to={`/${page}`}
                         style={{ textDecoration: 'none', color: 'inherit' }}
                       >
                         {page.charAt(0).toUpperCase() + page.slice(1)}
-                      </RouterLink>
+                      </Link>
                     </Typography>
                   </MenuItem>
                 ))}
+                <Toggledarkmode />
               </Menu>
               {/* Logo and site name */}
               <Typography
@@ -130,7 +131,7 @@ const Navbar: React.FC = () => {
                   <Button
                     key={page}
                     sx={{ mx: 1, color: 'white' }}
-                    component={RouterLink}
+                    component={Link}
                     to={`/${page}`}
                   >
                     {page.charAt(0).toUpperCase() + page.slice(1)}
@@ -142,10 +143,9 @@ const Navbar: React.FC = () => {
               <IconButton sx={{ mx: 1, color: 'white' }}>
                 <SearchIcon />
               </IconButton>
-              <IconButton sx={{ mx: 1, color: 'white' }}>
-                <ShoppingCartIcon />
-              </IconButton>
-              <Tooltip title='Open settings'>
+              <CartIcon />
+              <LoginModal />
+              <Tooltip title='User menu'>
                 <IconButton
                   onClick={handleOpenUserMenu}
                   sx={{ mx: 1, color: 'white' }}
@@ -175,6 +175,7 @@ const Navbar: React.FC = () => {
                     <Typography textAlign='center'>{setting}</Typography>
                   </MenuItem>
                 ))}
+                <Toggledarkmode />
               </Menu>
             </Box>
           </Toolbar>

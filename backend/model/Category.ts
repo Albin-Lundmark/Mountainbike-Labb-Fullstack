@@ -1,14 +1,9 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-import Product from './Product'
 
 class Category extends Model {
   public id!: number
   public name!: string
-
-  static associate(models: any) {
-    Category.hasMany(models.Product, { foreignKey: 'category_id' })
-  }
 }
 
 Category.init(

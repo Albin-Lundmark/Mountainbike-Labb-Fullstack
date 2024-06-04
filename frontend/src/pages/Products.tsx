@@ -9,6 +9,7 @@ interface Product {
   name: string
   description: string
   image: string
+  price: number
   category_id: number
 }
 
@@ -126,11 +127,13 @@ const Products: React.FC = () => {
       >
         {products ? (
           <Grid container spacing={2} sx={{ maxWidth: 1300 }}>
-            {products.map((product, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+            {products.map(product => (
+              <Grid item xs={12} sm={6} md={4} key={product.id}>
                 <ProductCard
+                  id={product.id}
                   name={product.name}
                   image={product.image}
+                  price={product.price}
                   description={product.description}
                 />
               </Grid>

@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize'
 import sequelize from '../db'
-import Category from './Category'
 
 class Product extends Model {
   public id!: number
@@ -10,10 +9,6 @@ class Product extends Model {
   public price!: number
   public created_at!: Date
   public category_id!: number
-
-  static associate(models: any) {
-    Product.belongsTo(models.Category, { foreignKey: 'category_id' })
-  }
 }
 
 Product.init(

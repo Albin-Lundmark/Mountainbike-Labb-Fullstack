@@ -5,7 +5,7 @@
   "scripts": {
     "build-backend": "tsc",
     "build-frontend": "npm run --prefix ../frontend build && rm -Rf dist && mv ../frontend/dist .",
-    "sync": "ts-node model/sync.ts",
+    "sync": "ts-node Sync.ts",
     "server": "nodemon index.ts",
     "build": "npm run build-frontend && npm run build-backend",
     "start": "node dist/index.js",

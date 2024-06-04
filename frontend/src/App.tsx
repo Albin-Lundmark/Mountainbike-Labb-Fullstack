@@ -4,16 +4,21 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Products from './pages/Products'
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
 import CustomThemeProvider from './context/ThemeProvider'
+import { CartProvider } from './context/CartContext'
 
 const Root: React.FC = () => {
   return (
     <CustomThemeProvider>
-      <Navbar />
-      <main>
-        <Outlet />
-      </main>
+      <CartProvider>
+        <Navbar />
+        <main>
+          <Outlet />
+        </main>
+        <Footer />
+      </CartProvider>
     </CustomThemeProvider>
   )
 }
