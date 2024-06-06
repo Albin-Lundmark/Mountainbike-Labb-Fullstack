@@ -86,7 +86,7 @@ const Products: React.FC = () => {
   }
 
   return (
-    <>
+    <Box sx={{ marginTop: '18vh' }}>
       <Box
         sx={{
           display: 'flex',
@@ -145,7 +145,7 @@ const Products: React.FC = () => {
           </Div>
         )}
       </Box>
-    </>
+    </Box>
   )
 }
 

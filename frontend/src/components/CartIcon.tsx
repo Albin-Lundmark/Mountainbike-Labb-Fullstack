@@ -48,7 +48,7 @@ const CartIcon: React.FC = () => {
 
   return (
     <>
-      <IconButton color='inherit' onClick={handleCartClick}>
+      <IconButton color='success' onClick={handleCartClick}>
         <Badge
           badgeContent={localStorage.getItem('cartItemCount') || '0'}
           color='secondary'

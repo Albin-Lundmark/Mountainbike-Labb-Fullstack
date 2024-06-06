@@ -15,8 +15,9 @@ import {
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
-import CartIcon from './CartIcon'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import { styled } from '@mui/system'
+import CartIcon from './CartIcon'
 import Logo from './Logo'
 import Toggledarkmode from './Toggledarkmode'
 import LoginModal from './LoginModal'
@@ -24,16 +25,33 @@ import LoginModal from './LoginModal'
 const pages = ['home', 'products', 'about']
 const settings = ['Profile', 'Login']
 
-const ElevationScroll: React.FC<{ children: React.ReactElement }> = ({
-  children
-}) => {
+interface StyledAppBarProps {
+  isScrolled?: boolean
+}
+
+const StyledAppBar = styled(AppBar)<StyledAppBarProps>(
+  ({ theme, isScrolled }) => ({
+    backgroundColor: isScrolled
+      ? theme.palette.background.paper ?? 'rgba(255, 255, 255, 0.8)'
+      : 'transparent',
+    transition: 'background-color 0.3s ease-in-out',
+    boxShadow: isScrolled ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none',
+    minHeight: '18vh'
+  })
+)
+
+interface ElevationScrollProps {
+  children: React.ReactElement
+}
+
+const ElevationScroll: React.FC<ElevationScrollProps> = ({ children }) => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 0
+    threshold: 25
   })
 
   return React.cloneElement(children, {
-    elevation: trigger ? 5 : 0
+    isScrolled: trigger
   })
 }
 
@@ -59,7 +77,7 @@ const Navbar: React.FC = () => {
 
   return (
     <ElevationScroll>
-      <AppBar position='sticky'>
+      <StyledAppBar position='fixed'>
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             {/* Navigation for mobile */}
@@ -98,15 +116,18 @@ const Navbar: React.FC = () => {
                     <Typography variant='inherit'>
                       <Link
                         to={`/${page}`}
-                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        style={{
+                          textDecoration: 'none',
+                          color: 'text.primary'
+                        }}
                       >
                         {page.charAt(0).toUpperCase() + page.slice(1)}
                       </Link>
                     </Typography>
+                    <Toggledarkmode />
+                    {/* Make sure to move to a better location */}
                   </MenuItem>
                 ))}
-                <Toggledarkmode />
-                {/* Make sure to move to a better location */}
               </Menu>
               {/* Logo and site name */}
               <Typography
@@ -117,7 +138,7 @@ const Navbar: React.FC = () => {
                   ml: { md: 2 },
                   flexGrow: 1,
                   letterSpacing: '.3rem',
-                  color: 'inherit',
+                  color: 'text.primary',
                   textDecoration: 'none'
                 }}
               >
@@ -131,7 +152,7 @@ const Navbar: React.FC = () => {
                 {pages.map(page => (
                   <Button
                     key={page}
-                    sx={{ mx: 1, color: 'white' }}
+                    sx={{ mx: 1, color: 'text.primary' }}
                     component={Link}
                     to={`/${page}`}
                   >
@@ -141,17 +162,14 @@ const Navbar: React.FC = () => {
               </Box>
 
               {/* Action buttons */}
-              <IconButton sx={{ mx: 1, color: 'white' }}>
+              <IconButton sx={{ mx: 1, color: 'text.primary' }}>
                 <SearchIcon />
               </IconButton>
               <CartIcon />
-              <LoginModal />
-              <Toggledarkmode />
-              {/* Make sure to move this button to a better location */}
               <Tooltip title='User menu'>
                 <IconButton
                   onClick={handleOpenUserMenu}
-                  sx={{ mx: 1, color: 'white' }}
+                  sx={{ mx: 1, color: 'text.primary' }}
                 >
                   <AccountCircleIcon />
                 </IconButton>
@@ -178,11 +196,14 @@ const Navbar: React.FC = () => {
                     <Typography textAlign='center'>{setting}</Typography>
                   </MenuItem>
                 ))}
+                <LoginModal />
+                <Toggledarkmode />
+                {/* Make sure to move this button to a better location */}
               </Menu>
             </Box>
           </Toolbar>
         </Container>
-      </AppBar>
+      </StyledAppBar>
     </ElevationScroll>
   )
 }

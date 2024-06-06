@@ -1,11 +1,12 @@
-import Grid from '@mui/material/Grid'
+import { Button, Grid } from '@mui/material'
+import { Link } from 'react-router-dom'
 import { useMediaQuery, createTheme } from '@mui/material'
 
 const theme = createTheme()
 
 const Hero: React.FC = () => {
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
-  const isTablet = useMediaQuery(theme.breakpoints.between('md', 'lg'))
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'))
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   let imageUrl =
@@ -23,16 +24,41 @@ const Hero: React.FC = () => {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={12}>
-        <img
-          src={imageUrl}
-          alt='Hero'
-          style={{
-            width: '100%',
-            height: 'auto'
+    <Grid
+      container
+      justifyContent={'center'}
+      sx={{
+        backgroundImage: `url(${imageUrl})`,
+        borderImage: `fill 0 linear-gradient(#000000c0, #9d9d9d10)`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        width: '100%',
+        height: '100vh',
+        maxHeight: '100vh'
+      }}
+    >
+      <Grid item xs={'auto'}>
+        <Button
+          variant='contained'
+          color='success'
+          component={Link}
+          to={'/products'}
+          sx={{
+            fontSize: isMobile
+              ? '1rem'
+              : isTablet
+              ? '1.2rem'
+              : isDesktop
+              ? '1.5rem'
+              : '1.5rem',
+            position: 'relative',
+            top: '70vh',
+            cursor: 'pointer'
           }}
-        />
+        >
+          See our products
+        </Button>
       </Grid>
     </Grid>
   )

@@ -1,4 +1,3 @@
-// CustomThemeProvider.tsx
 import * as React from 'react'
 import {
   createTheme,

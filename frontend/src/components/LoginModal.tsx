@@ -5,6 +5,8 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  DialogActions,
+  TextField,
   Button,
   Slide,
   SlideProps,
@@ -75,8 +77,8 @@ const LoginModal: React.FC = () => {
       setOpen(false)
     } catch (err) {
       setErrors({
-        email: 'Invalid username or password',
-        password: 'Invalid username or password'
+        email: 'Invalid email',
+        password: 'Invalid password'
       })
     } finally {
       setSubmitting(false)
@@ -122,14 +124,12 @@ const LoginModal: React.FC = () => {
       {!isLoggedIn ? (
         <>
           <Button
-            variant='contained'
-            color='primary'
+            variant='text'
+            size='small'
             onClick={() => setOpen(true)}
             sx={{
-              position: 'absolute',
-              top: '7vh',
-              left: '3vw',
-              cursor: 'pointer'
+              cursor: 'pointer',
+              color: 'white'
             }}
           >
             Login/Register
@@ -164,38 +164,57 @@ const LoginModal: React.FC = () => {
                 validate={validate}
                 onSubmit={isRegister ? handleRegisterSubmit : handleLoginSubmit}
               >
-                {({ isSubmitting }) => (
+                {({ errors, touched, isSubmitting }) => (
                   <Form>
-                    <div>
-                      <label htmlFor='email'>Email:</label>
-                      <Field type='text' name='email' id='email' required />
-                      <ErrorMessage name='email' component='div' />
-                    </div>
-                    <div>
-                      <label htmlFor='password'>Password:</label>
-                      <Field
-                        type='password'
-                        name='password'
-                        id='password'
-                        required
-                      />
-                      <ErrorMessage name='password' component='div' />
-                    </div>
+                    <Field
+                      as={TextField}
+                      name='email'
+                      type='text'
+                      label='Email'
+                      fullWidth
+                      margin='normal'
+                      error={touched.email && !!errors.email}
+                    />
+                    <ErrorMessage name='email' component='div' />
+
+                    <Field
+                      as={TextField}
+                      name='password'
+                      type='password'
+                      label='Password'
+                      fullWidth
+                      margin='normal'
+                      error={touched.password && !!errors.password}
+                    />
+                    <ErrorMessage name='password' component='div' />
+
                     {isRegister && (
-                      <div>
-                        <label htmlFor='confirmPassword'>
-                          Confirm Password:
-                        </label>
+                      <>
                         <Field
-                          type='password'
+                          as={TextField}
                           name='confirmPassword'
-                          id='confirmPassword'
-                          required
+                          type='password'
+                          label='Confirm Password'
+                          fullWidth
+                          margin='normal'
+                          error={
+                            touched.confirmPassword && !!errors.confirmPassword
+                          }
                         />
                         <ErrorMessage name='confirmPassword' component='div' />
-                      </div>
+                      </>
                     )}
-                    <div>
+
+                    <DialogActions>
+                      <Button
+                        type='button'
+                        onClick={toggleForm}
+                        color='primary'
+                      >
+                        {isRegister
+                          ? 'Already have an account? Login'
+                          : `Don't have an account yet? Register`}
+                      </Button>
                       <Button
                         type='submit'
                         variant='contained'
@@ -210,14 +229,7 @@ const LoginModal: React.FC = () => {
                           ? 'Register'
                           : 'Login'}
                       </Button>
-                    </div>
-                    <div>
-                      <Button type='button' onClick={toggleForm}>
-                        {isRegister
-                          ? 'Already have an account? Login'
-                          : `Don't have an account yet? Register`}
-                      </Button>
-                    </div>
+                    </DialogActions>
                   </Form>
                 )}
               </Formik>
@@ -225,11 +237,19 @@ const LoginModal: React.FC = () => {
           </Dialog>
         </>
       ) : (
-        <div>
-          <Button variant='contained' color='secondary' onClick={handleLogout}>
+        <>
+          <Button
+            variant='text'
+            size='small'
+            sx={{
+              cursor: 'pointer',
+              color: 'white'
+            }}
+            onClick={handleLogout}
+          >
             Logout
           </Button>
-        </div>
+        </>
       )}
     </>
   )

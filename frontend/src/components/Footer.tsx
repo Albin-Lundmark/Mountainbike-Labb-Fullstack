@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Button } from '@mui/material'
 
 const Footer = () => {
   return (
@@ -11,9 +12,30 @@ const Footer = () => {
           color: 'inherit'
         }}
       >
-        <Link to={'/home'}>Home</Link>
-        <Link to={'/products'}>Products</Link>
-        <Link to={'/about'}>About</Link>
+        <Button
+          sx={{ marginBottom: 5 }}
+          variant='text'
+          component={Link}
+          to={'/home'}
+        >
+          Home
+        </Button>
+        <Button
+          sx={{ marginBottom: 5 }}
+          variant='text'
+          component={Link}
+          to={'/products'}
+        >
+          Products
+        </Button>
+        <Button
+          sx={{ marginBottom: 5 }}
+          variant='text'
+          component={Link}
+          to={'/about'}
+        >
+          About
+        </Button>
       </div>
     </>
   )
