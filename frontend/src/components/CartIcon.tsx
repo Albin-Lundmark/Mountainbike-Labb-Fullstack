@@ -48,11 +48,8 @@ const CartIcon: React.FC = () => {
 
   return (
     <>
-      <IconButton color='success' onClick={handleCartClick}>
-        <Badge
-          badgeContent={localStorage.getItem('cartItemCount') || '0'}
-          color='secondary'
-        >
+      <IconButton onClick={handleCartClick}>
+        <Badge badgeContent={localStorage.getItem('cartItemCount') || '0'}>
           <ShoppingCartIcon />
         </Badge>
       </IconButton>

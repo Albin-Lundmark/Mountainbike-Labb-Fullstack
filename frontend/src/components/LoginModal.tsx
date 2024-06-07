@@ -129,7 +129,7 @@ const LoginModal: React.FC = () => {
             onClick={() => setOpen(true)}
             sx={{
               cursor: 'pointer',
-              color: 'white'
+              color: 'text.primary'
             }}
           >
             Login/Register
@@ -243,7 +243,7 @@ const LoginModal: React.FC = () => {
             size='small'
             sx={{
               cursor: 'pointer',
-              color: 'white'
+              color: 'text.primary'
             }}
             onClick={handleLogout}
           >

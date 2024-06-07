@@ -23,7 +23,6 @@ import Toggledarkmode from './Toggledarkmode'
 import LoginModal from './LoginModal'
 
 const pages = ['home', 'products', 'about']
-const settings = ['Profile', 'Login']
 
 interface StyledAppBarProps {
   isScrolled?: boolean
@@ -82,28 +81,32 @@ const Navbar: React.FC = () => {
           <Toolbar disableGutters>
             {/* Navigation for mobile */}
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                size='large'
-                aria-label='menu'
-                aria-controls='menu-appbar'
-                aria-haspopup='true'
-                onClick={handleOpenNavMenu}
-                color='inherit'
-                sx={{ display: { md: 'none' } }}
+              {/* Logo and site name */}
+              <Typography
+                variant='h6'
+                noWrap
+                component='div'
+                sx={{
+                  ml: { md: 2 },
+                  flexGrow: 1,
+                  letterSpacing: '.3rem',
+                  color: 'text.primary',
+                  textDecoration: 'none'
+                }}
               >
-                <MenuIcon />
-              </IconButton>
+                <Logo />
+              </Typography>
               <Menu
                 id='menu-appbar'
                 anchorEl={anchorElNav}
                 anchorOrigin={{
-                  vertical: 'top',
+                  vertical: 'bottom',
                   horizontal: 'left'
                 }}
                 keepMounted
                 transformOrigin={{
                   vertical: 'top',
-                  horizontal: 'left'
+                  horizontal: 'center'
                 }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
@@ -124,26 +127,23 @@ const Navbar: React.FC = () => {
                         {page.charAt(0).toUpperCase() + page.slice(1)}
                       </Link>
                     </Typography>
-                    <Toggledarkmode />
-                    {/* Make sure to move to a better location */}
                   </MenuItem>
                 ))}
+                <MenuItem component={Toggledarkmode}>
+                  {/* Make sure to move to a better location */}
+                </MenuItem>
               </Menu>
-              {/* Logo and site name */}
-              <Typography
-                variant='h6'
-                noWrap
-                component='div'
-                sx={{
-                  ml: { md: 2 },
-                  flexGrow: 1,
-                  letterSpacing: '.3rem',
-                  color: 'text.primary',
-                  textDecoration: 'none'
-                }}
+              <IconButton
+                size='large'
+                aria-label='menu'
+                aria-controls='menu-appbar'
+                aria-haspopup='true'
+                onClick={handleOpenNavMenu}
+                color='inherit'
+                sx={{ display: { md: 'none' } }}
               >
-                <Logo />
-              </Typography>
+                <MenuIcon />
+              </IconButton>
             </Box>
 
             {/* Navigation for desktop */}
@@ -159,21 +159,23 @@ const Navbar: React.FC = () => {
                     {page.charAt(0).toUpperCase() + page.slice(1)}
                   </Button>
                 ))}
+                {/* Action buttons */}
+                <IconButton sx={{ mx: 1, color: 'text.primary' }}>
+                  <SearchIcon />
+                </IconButton>
+                <IconButton sx={{ mx: 1, color: 'text.primary' }}>
+                  <CartIcon />
+                </IconButton>
+                <Tooltip title='User menu'>
+                  <IconButton
+                    onClick={handleOpenUserMenu}
+                    sx={{ mx: 1, color: 'text.primary' }}
+                  >
+                    <AccountCircleIcon />
+                  </IconButton>
+                </Tooltip>
               </Box>
 
-              {/* Action buttons */}
-              <IconButton sx={{ mx: 1, color: 'text.primary' }}>
-                <SearchIcon />
-              </IconButton>
-              <CartIcon />
-              <Tooltip title='User menu'>
-                <IconButton
-                  onClick={handleOpenUserMenu}
-                  sx={{ mx: 1, color: 'text.primary' }}
-                >
-                  <AccountCircleIcon />
-                </IconButton>
-              </Tooltip>
               {/* User settings menu */}
               <Menu
                 sx={{ mt: '45px' }}
@@ -191,14 +193,12 @@ const Navbar: React.FC = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map(setting => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
-                <LoginModal />
-                <Toggledarkmode />
-                {/* Make sure to move this button to a better location */}
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <LoginModal />
+                </MenuItem>
+                <MenuItem onClick={handleCloseUserMenu}>
+                  <Toggledarkmode />
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>
