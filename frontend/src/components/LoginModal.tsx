@@ -10,7 +10,8 @@ import {
   Button,
   Slide,
   SlideProps,
-  IconButton
+  IconButton,
+  MenuItem
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
@@ -123,17 +124,14 @@ const LoginModal: React.FC = () => {
     <>
       {!isLoggedIn ? (
         <>
-          <Button
-            variant='text'
-            size='small'
+          <MenuItem
             onClick={() => setOpen(true)}
             sx={{
-              cursor: 'pointer',
               color: 'text.primary'
             }}
           >
             Login/Register
-          </Button>
+          </MenuItem>
           <Dialog
             open={open}
             TransitionComponent={Transition}

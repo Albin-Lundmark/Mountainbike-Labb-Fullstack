@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   Container,
   Typography,
@@ -28,6 +28,8 @@ interface CheckoutFormValues {
 interface CartProps {
   open: boolean
   onClose: () => void
+  onPaymentSuccess: (message: string) => void
+  onPaymentError: (message: string) => void
 }
 
 const Transition = React.forwardRef(function Transition(
@@ -39,24 +41,30 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction='left' ref={ref} {...props} />
 })
 
-const Cart: React.FC<CartProps> = ({ open, onClose }) => {
+const Cart: React.FC<CartProps> = ({
+  open,
+  onClose,
+  onPaymentSuccess,
+  onPaymentError
+}) => {
   const { cartItems, setCartItems } = useCart()
-  const [cartItemsCount, setCartItemsCount] = useState(0)
 
   const fetchCartItems = async () => {
     const token = localStorage.getItem('token')
-    const endpoint = token
-      ? 'http://localhost:8080/cart/auth'
-      : 'http://localhost:8080/cart/guest'
+    const endpoint = 'http://localhost:8080/cart'
 
-    try {
-      const response = await axios.get(endpoint, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {}
-      })
-      setCartItemsCount(response.data.length)
-      setCartItems(response.data)
-    } catch (error) {
-      console.error('Error fetching cart items:', error)
+    if (token) {
+      try {
+        const response = await axios.get(endpoint, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {}
+        })
+        setCartItems(response.data)
+      } catch (error) {
+        console.error('Error fetching cart items:', error)
+      }
+    } else {
+      const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
+      setCartItems(guestCart)
     }
   }
 
@@ -65,14 +73,23 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
   }, [cartItems])
 
   const handleSubmit = async (values: CheckoutFormValues) => {
-    try {
-      await axios.post('http://localhost:8080/checkout', values)
-      alert('Thanks for your order!')
-      setCartItems([])
-    } catch (error) {
-      console.error('Error processing payment:', error)
-      alert('Payment failed. Please try again.')
+    const token = localStorage.getItem('token')
+    if (token) {
+      try {
+        await axios.post('http://localhost:8080/checkout', values)
+        onPaymentSuccess('Thank you for your order!')
+        setCartItems([])
+        onClose()
+      } catch (error) {
+        onPaymentError(
+          'Something went wrong with your order, please try again.'
+        )
+        console.error('Error processing payment:', error)
+      }
     }
+    localStorage.removeItem('guestCart')
+    setCartItems([])
+    onClose()
   }
 
   const validationSchema = Yup.object({
@@ -82,74 +99,77 @@ const Cart: React.FC<CartProps> = ({ open, onClose }) => {
   })
 
   return (
-    <Dialog open={open} TransitionComponent={Transition} onClose={onClose}>
-      <DialogTitle>Cart</DialogTitle>
-      <DialogContent>
-        <Container>
-          {cartItemsCount}
-          <List>
-            {cartItems &&
-              cartItems.map(item => (
-                <ListItem key={item.id}>
-                  <ListItemText
-                    primary={item.name}
-                    secondary={`Quantity: ${item.quantity} Price: $${item.price}`}
+    <>
+      <Dialog open={open} TransitionComponent={Transition} onClose={onClose}>
+        <DialogTitle>Cart</DialogTitle>
+        <DialogContent>
+          <Container>
+            <List>
+              {cartItems &&
+                cartItems.map(item => (
+                  <ListItem key={item.id}>
+                    <ListItemText
+                      primary={item.name}
+                      secondary={`Quantity: ${item.quantity} Price: ${item.price} kr`}
+                    />
+                  </ListItem>
+                ))}
+            </List>
+            <Typography variant='h6'>
+              Total:
+              {cartItems.reduce(
+                (total, item) => total + item.price * item.quantity,
+                0
+              )}{' '}
+            </Typography>
+            <Formik
+              initialValues={{ cardNumber: '', expiryDate: '', cvv: '' }}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <Field
+                    as={TextField}
+                    name='cardNumber'
+                    label='Card Number'
+                    fullWidth
+                    sx={{ marginY: 1 }}
+                    error={touched.cardNumber && !!errors.cardNumber}
+                    helperText={touched.cardNumber && errors.cardNumber}
                   />
-                </ListItem>
-              ))}
-          </List>
-          <Typography variant='h6'>
-            Total:
-            {cartItems.reduce(
-              (total, item) => total + item.price * item.quantity,
-              0
-            )}{' '}
-          </Typography>
-          <Formik
-            initialValues={{ cardNumber: '', expiryDate: '', cvv: '' }}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ errors, touched }) => (
-              <Form>
-                <Field
-                  as={TextField}
-                  name='cardNumber'
-                  label='Card Number'
-                  fullWidth
-                  error={touched.cardNumber && !!errors.cardNumber}
-                  helperText={touched.cardNumber && errors.cardNumber}
-                />
-                <Field
-                  as={TextField}
-                  name='expiryDate'
-                  label='Expiry Date'
-                  fullWidth
-                  error={touched.expiryDate && !!errors.expiryDate}
-                  helperText={touched.expiryDate && errors.expiryDate}
-                />
-                <Field
-                  as={TextField}
-                  name='cvv'
-                  label='CVV'
-                  fullWidth
-                  error={touched.cvv && !!errors.cvv}
-                  helperText={touched.cvv && errors.cvv}
-                />
-                <DialogActions>
-                  <Button onClick={onClose} color='primary'>
-                    Continue shopping
-                  </Button>
-                  <Button type='submit' variant='contained' color='primary'>
-                    Checkout
-                  </Button>
-                </DialogActions>
-              </Form>
-            )}
-          </Formik>
-        </Container>
-      </DialogContent>
-    </Dialog>
+                  <Field
+                    as={TextField}
+                    name='expiryDate'
+                    label='Expiry Date'
+                    fullWidth
+                    sx={{ marginBottom: 1 }}
+                    error={touched.expiryDate && !!errors.expiryDate}
+                    helperText={touched.expiryDate && errors.expiryDate}
+                  />
+                  <Field
+                    as={TextField}
+                    name='cvv'
+                    label='CVV'
+                    fullWidth
+                    error={touched.cvv && !!errors.cvv}
+                    helperText={touched.cvv && errors.cvv}
+                  />
+                  <DialogActions>
+                    <Button onClick={onClose} color='primary'>
+                      Continue shopping
+                    </Button>
+                    <Button type='submit' variant='contained' color='primary'>
+                      Checkout
+                    </Button>
+                  </DialogActions>
+                </Form>
+              )}
+            </Formik>
+          </Container>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 

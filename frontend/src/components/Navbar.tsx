@@ -129,9 +129,8 @@ const Navbar: React.FC = () => {
                     </Typography>
                   </MenuItem>
                 ))}
-                <MenuItem component={Toggledarkmode}>
-                  {/* Make sure to move to a better location */}
-                </MenuItem>
+                <LoginModal />
+                <Toggledarkmode />
               </Menu>
               <IconButton
                 size='large'
@@ -163,9 +162,10 @@ const Navbar: React.FC = () => {
                 <IconButton sx={{ mx: 1, color: 'text.primary' }}>
                   <SearchIcon />
                 </IconButton>
-                <IconButton sx={{ mx: 1, color: 'text.primary' }}>
-                  <CartIcon />
-                </IconButton>
+                <IconButton
+                  component={CartIcon}
+                  sx={{ mx: 1, color: 'text.primary' }}
+                ></IconButton>
                 <Tooltip title='User menu'>
                   <IconButton
                     onClick={handleOpenUserMenu}
@@ -193,12 +193,8 @@ const Navbar: React.FC = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <LoginModal />
-                </MenuItem>
-                <MenuItem onClick={handleCloseUserMenu}>
-                  <Toggledarkmode />
-                </MenuItem>
+                <LoginModal />
+                <Toggledarkmode />
               </Menu>
             </Box>
           </Toolbar>

@@ -36,28 +36,25 @@ const ProductCard: React.FC<CardProps> = ({
 
   const addToCart = async () => {
     const token = localStorage.getItem('token')
-    const endpoint = token
-      ? 'http://localhost:8080/cart/auth'
-      : 'http://localhost:8080/cart/guest'
-
     const headers = token ? { Authorization: `Bearer ${token}` } : {}
 
     try {
-      const response = await axios.post(
-        endpoint,
-        {
-          product_id: id,
-          quantity: 1
-        },
-        { headers }
-      )
-
       if (token) {
+        const response = await axios.post(
+          'http://localhost:8080/cart',
+          {
+            product_id: id,
+            quantity: 1
+          },
+          { headers }
+        )
+        console.log(response.data)
         setCartItems(prevItems => [...prevItems, response.data])
       } else {
         const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
-        guestCart.push(response.data)
+        guestCart.push({ product_id: id, quantity: 1 })
         localStorage.setItem('guestCart', JSON.stringify(guestCart))
+        setCartItems(prevItems => [...prevItems, guestCart])
       }
 
       alert(`${name} added to cart!`)

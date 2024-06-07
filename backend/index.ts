@@ -8,10 +8,6 @@ import User from './model/User'
 import Product from './model/Product'
 import Category from './model/Category'
 import Cart from './model/Cart'
-/* const User = require('./model/User')
-const Product = require('./model/Product')
-const Category = require('./model/Category')
-const Cart = require('./model/Cart') */
 import sequelize from './db'
 import { Op } from 'sequelize'
 import auth from './authenticate/auth'
@@ -19,7 +15,11 @@ import auth from './authenticate/auth'
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT || 5173
+const port = process.env.PORT || 8080
+
+interface CustomRequest extends express.Request {
+  user?: { id: number }
+}
 
 app.use(cors())
 app.use(express.json())
@@ -102,7 +102,7 @@ app.get('/products/search/:name', async (req, res) => {
   }
 })
 
-app.get('/cart/auth', auth, async (req: CustomRequest, res) => {
+app.get('/cart', auth, async (req: CustomRequest, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'User not authenticated' })
   }
@@ -132,52 +132,9 @@ app.get('/cart/auth', auth, async (req: CustomRequest, res) => {
   }
 })
 
-app.get('/cart/guest', async (_req, res) => {
-  try {
-    const cartItemsStorage = localStorage.getItem('guestCart')
-    if (!cartItemsStorage) {
-      return res.status(404).json({ message: 'Cart not found' })
-    }
-    const cartItems = JSON.parse(cartItemsStorage)
-    res.json(cartItems)
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-})
-
-app.post('/cart/guest', async (req, res) => {
+app.post('/cart', auth, async (req: CustomRequest, res) => {
   const { product_id, quantity } = req.body
-
-  if (!product_id || !quantity) {
-    return res
-      .status(400)
-      .json({ message: 'Product ID and quantity are required' })
-  }
-
-  try {
-    const product = await Product.findByPk(product_id)
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' })
-    }
-    const cartItem = { product_id, quantity }
-    res.status(200).json(cartItem)
-  } catch (error) {
-    console.error('Error adding to guest cart:', error)
-    res.status(500).json({ message: 'Internal server error' })
-  }
-})
-
-interface CustomRequest extends express.Request {
-  user?: { id: number }
-}
-
-app.post('/cart/auth', auth, async (req: CustomRequest, res) => {
-  const { product_id, quantity } = req.body
-  if (!req.user) {
-    return res.status(401).json({ message: 'User not authenticated' })
-  }
-  const user_id = req.user.id
+  const user_id = req.user?.id
 
   if (!product_id || !quantity) {
     return res
@@ -191,34 +148,51 @@ app.post('/cart/auth', auth, async (req: CustomRequest, res) => {
       return res.status(404).json({ message: 'Product not found' })
     }
 
-    let cartItem = await Cart.findOne({ where: { user_id, product_id } })
-    if (cartItem) {
-      cartItem.quantity += quantity
-      await cartItem.save()
-    } else {
-      cartItem = await Cart.create({ user_id, product_id, quantity })
+    let cartItem
+    if (user_id) {
+      cartItem = await Cart.findOne({ where: { user_id, product_id } })
+      if (cartItem) {
+        cartItem.quantity += quantity
+        await cartItem.save()
+      } else {
+        cartItem = await Cart.create({ user_id, product_id, quantity })
+      }
     }
 
-    res.status(200).json(cartItem)
+    return res.status(200).json(cartItem)
   } catch (error) {
     console.error('Error adding to cart:', error)
-    res.status(500).json({ message: 'Internal server error' })
+    return res.status(500).json({ message: 'Internal server error' })
   }
 })
 
 app.post('/checkout', auth, async (req: CustomRequest, res) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'User not authenticated' })
+  const { cardNumber, expiryDate, cvv, guestCart } = req.body
+  const user = req.user
+
+  if (!cardNumber || !expiryDate || !cvv) {
+    return res.status(400).json({ message: 'All fields are required' })
   }
-  const user_id = req.user.id
 
   try {
-    await Cart.destroy({ where: { user_id } })
-
-    res.status(200).json({ message: 'TOrder has been sent successfully!' })
+    if (user) {
+      const user_id = user.id
+      await Cart.destroy({ where: { user_id } })
+      return res
+        .status(200)
+        .json({ message: 'Order has been sent successfully!' })
+    } else {
+      if (!guestCart || guestCart.length === 0) {
+        return res.status(400).json({ message: 'Guest cart is empty' })
+      }
+      localStorage.removeItem('guestCart')
+      return res
+        .status(200)
+        .json({ message: 'Order has been sent successfully for guest!' })
+    }
   } catch (error) {
     console.error('Error during checkout:', error)
-    res.status(500).json({ message: 'Internal server error' })
+    return res.status(500).json({ message: 'Internal server error' })
   }
 })
 
