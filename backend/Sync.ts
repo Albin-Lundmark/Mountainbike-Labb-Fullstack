@@ -1,8 +1,8 @@
 import sequelize from './db'
-import User from './model/User'
-import Cart from './model/Cart'
-import Category from './model/Category'
-import Product from './model/Product'
+import User from './models/User'
+import Cart from './models/Cart'
+import Category from './models/Category'
+import Product from './models/Product'
 
 const syncDatabase = async () => {
   User.hasMany(Cart, { foreignKey: 'user_id' })

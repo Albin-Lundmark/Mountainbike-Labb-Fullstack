@@ -10,7 +10,7 @@
   },
   "include": [
     "./*.ts",
-    "./model/**/*.ts",
+    "models/**/*.ts",
     "./**/*.ts"
   ],
   "exclude": [
