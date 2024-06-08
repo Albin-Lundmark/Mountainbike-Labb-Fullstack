@@ -64,13 +64,13 @@ const Cart: React.FC<CartProps> = ({
       }
     } else {
       const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
-      console.log(guestCart)
+      setCartItems(guestCart)
     }
   }
 
   useEffect(() => {
     fetchCartItems()
-  }, [cartItems])
+  }, [])
 
   const handleSubmit = async (values: CheckoutFormValues) => {
     const token = localStorage.getItem('token')
@@ -88,6 +88,7 @@ const Cart: React.FC<CartProps> = ({
       }
     }
     localStorage.removeItem('guestCart')
+    onPaymentSuccess('Thank you for your order sir!')
     setCartItems([])
     onClose()
   }

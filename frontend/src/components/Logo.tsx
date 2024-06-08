@@ -5,10 +5,10 @@ import { Typography } from '@mui/material'
 
 const Logo: React.FC = () => {
   return (
-    <Link to={'/home'} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <Link to={'/home'} style={{ textDecoration: 'none' }}>
       <Div>
         <img src={logo} alt='Mountainbikers Logotype' />
-        <Typography color='text.primary' fontSize={10}>
+        <Typography color='text.primary' fontSize={'auto'}>
           Mountainbikers
         </Typography>
       </Div>

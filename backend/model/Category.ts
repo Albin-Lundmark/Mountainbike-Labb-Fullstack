@@ -1,7 +1,18 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Optional } from 'sequelize'
 import sequelize from '../db'
 
-class Category extends Model {
+interface CategoryAttributes {
+  id: number
+  name: string
+}
+
+interface CategoryCreationAttributes
+  extends Optional<CategoryAttributes, 'id'> {}
+
+class Category
+  extends Model<CategoryAttributes, CategoryCreationAttributes>
+  implements CategoryAttributes
+{
   public id!: number
   public name!: string
 }
@@ -10,8 +21,8 @@ Category.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
+      primaryKey: true
     },
     name: {
       type: DataTypes.STRING(25),

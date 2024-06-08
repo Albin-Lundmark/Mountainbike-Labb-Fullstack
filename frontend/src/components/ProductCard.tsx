@@ -58,7 +58,12 @@ const ProductCard: React.FC<CardProps> = ({
         setCartItems(prevItems => [...prevItems, response.data])
       } else {
         const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
-        guestCart.push({ product_id: id, quantity: 1 })
+        guestCart.push({
+          product_id: id,
+          name: name,
+          quantity: 1,
+          price: price
+        })
         localStorage.setItem('guestCart', JSON.stringify(guestCart))
         setCartItems(prevItems => [...prevItems, guestCart])
       }

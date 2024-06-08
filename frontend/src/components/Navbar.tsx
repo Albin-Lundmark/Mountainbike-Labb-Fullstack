@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  AppBar,
   Box,
   Toolbar,
   IconButton,
@@ -16,36 +15,13 @@ import {
 import MenuIcon from '@mui/icons-material/Menu'
 import SearchIcon from '@mui/icons-material/Search'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import { styled } from '@mui/system'
+import StyledAppBar from './StyledAppbar'
 import CartIcon from './CartIcon'
 import Logo from './Logo'
 import Toggledarkmode from './Toggledarkmode'
 import LoginModal from './LoginModal'
 
 const pages = ['home', 'products', 'about']
-
-interface StyledAppBarProps {
-  isScrolled?: boolean
-}
-
-const StyledAppBar = styled(AppBar)<StyledAppBarProps>(
-  ({ theme, isScrolled }) => ({
-    backgroundColor: isScrolled
-      ? theme.palette.background.paper ?? 'rgba(255, 255, 255, 0.8)'
-      : 'transparent',
-    transition: 'background-color 0.3s ease-in-out',
-    boxShadow: isScrolled ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none',
-    [theme.breakpoints.up('sm')]: {
-      minHeight: '12vh'
-    },
-    [theme.breakpoints.up('md')]: {
-      minHeight: '12vh'
-    },
-    [theme.breakpoints.up('lg')]: {
-      minHeight: '15vh'
-    }
-  })
-)
 
 interface ElevationScrollProps {
   children: React.ReactElement
@@ -84,15 +60,14 @@ const Navbar: React.FC = () => {
 
   return (
     <ElevationScroll>
-      <StyledAppBar position='fixed'>
+      <StyledAppBar>
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             {/* Navigation for mobile */}
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-              <IconButton
-                component={CartIcon}
-                sx={{ display: { md: 'none' } }}
-              ></IconButton>
+              <IconButton sx={{ display: { md: 'none', lg: 'none' } }}>
+                <CartIcon />
+              </IconButton>
               {/* Logo and site name */}
               <Box
                 sx={{
@@ -103,7 +78,7 @@ const Navbar: React.FC = () => {
               >
                 <Logo />
               </Box>
-              <IconButton>
+              <IconButton sx={{ display: { md: 'none', lg: 'none' } }}>
                 <SearchIcon />
               </IconButton>
               <Menu
@@ -167,10 +142,9 @@ const Navbar: React.FC = () => {
                 <IconButton sx={{ mx: 1, color: 'text.primary' }}>
                   <SearchIcon />
                 </IconButton>
-                <IconButton
-                  component={CartIcon}
-                  sx={{ mx: 1, color: 'text.primary' }}
-                ></IconButton>
+                <IconButton sx={{ mx: 1, color: 'text.primary' }}>
+                  <CartIcon />
+                </IconButton>
                 <Tooltip title='User menu'>
                   <IconButton
                     onClick={handleOpenUserMenu}

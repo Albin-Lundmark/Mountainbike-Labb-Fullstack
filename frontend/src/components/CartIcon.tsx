@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { IconButton, Badge, Snackbar, Alert, AlertProps } from '@mui/material'
+import { Badge, Snackbar, Alert, AlertProps } from '@mui/material'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import axios from 'axios'
 import Cart from './Cart'
@@ -81,9 +81,7 @@ const CartIcon: React.FC = () => {
         color='warning'
         badgeContent={localStorage.getItem('cartItemCount') || '0'}
       >
-        <IconButton onClick={handleCartClick}>
-          <ShoppingCartIcon />
-        </IconButton>
+        <ShoppingCartIcon onClick={handleCartClick} />
       </Badge>
       <Cart
         open={isCartOpen}

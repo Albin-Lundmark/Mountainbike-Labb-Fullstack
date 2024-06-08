@@ -1,19 +1,31 @@
-import { DataTypes, Model } from 'sequelize'
+import { DataTypes, Model, Optional } from 'sequelize'
 import sequelize from '../db'
 
-class User extends Model {
+interface UserAttributes {
+  id: number
+  email: string
+  password: string
+  created_at?: Date
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, 'id'> {}
+
+class User
+  extends Model<UserAttributes, UserCreationAttributes>
+  implements UserAttributes
+{
   public id!: number
   public email!: string
   public password!: string
-  public created_at!: Date
+  public readonly created_at!: Date
 }
 
 User.init(
   {
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
+      primaryKey: true
     },
     email: {
       type: DataTypes.STRING(50),
@@ -31,7 +43,7 @@ User.init(
   },
   {
     sequelize,
-    modelName: 'User',
+    modelName: 'Users',
     tableName: 'users',
     timestamps: false
   }

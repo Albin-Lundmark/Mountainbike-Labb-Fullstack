@@ -167,7 +167,7 @@ app.post('/cart', auth, async (req: CustomRequest, res) => {
 })
 
 app.post('/checkout', auth, async (req: CustomRequest, res) => {
-  const { cardNumber, expiryDate, cvv, guestCart } = req.body
+  const { cardNumber, expiryDate, cvv } = req.body
   const user = req.user
 
   if (!cardNumber || !expiryDate || !cvv) {
@@ -181,14 +181,6 @@ app.post('/checkout', auth, async (req: CustomRequest, res) => {
       return res
         .status(200)
         .json({ message: 'Order has been sent successfully!' })
-    } else {
-      if (!guestCart || guestCart.length === 0) {
-        return res.status(400).json({ message: 'Guest cart is empty' })
-      }
-      localStorage.removeItem('guestCart')
-      return res
-        .status(200)
-        .json({ message: 'Order has been sent successfully for guest!' })
     }
   } catch (error) {
     console.error('Error during checkout:', error)
