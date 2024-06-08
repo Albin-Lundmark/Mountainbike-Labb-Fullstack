@@ -27,9 +27,7 @@ const Products: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get<Category[]>(
-        'http://localhost:8080/categories'
-      )
+      const response = await axios.get<Category[]>('/categories')
       setCategories(response.data)
     } catch (err) {
       console.error('Error fetching categories:', err)
@@ -41,9 +39,7 @@ const Products: React.FC = () => {
       const query = selectedCategories.length
         ? `?categories=${selectedCategories.join(',')}`
         : ''
-      const response = await axios.get<Product[]>(
-        `http://localhost:8080/products${query}`
-      )
+      const response = await axios.get<Product[]>(`/products${query}`)
       setProducts(response.data)
       setLoading(false)
     } catch (err) {

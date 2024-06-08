@@ -51,7 +51,7 @@ const Cart: React.FC<CartProps> = ({
 
   const fetchCartItems = async () => {
     const token = localStorage.getItem('token')
-    const endpoint = 'http://localhost:8080/cart'
+    const endpoint = '/cart'
 
     if (token) {
       try {
@@ -76,7 +76,7 @@ const Cart: React.FC<CartProps> = ({
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        await axios.post('http://localhost:8080/checkout', values)
+        await axios.post('/checkout', values)
         onPaymentSuccess('Thank you for your order!')
         setCartItems([])
         onClose()

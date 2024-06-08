@@ -48,7 +48,7 @@ const ProductCard: React.FC<CardProps> = ({
     try {
       if (token) {
         const response = await axios.post(
-          'http://localhost:8080/cart',
+          '/cart',
           {
             product_id: id,
             quantity: 1

@@ -16,14 +16,7 @@ const syncDatabase = async () => {
 
   await sequelize.sync({ alter: true })
 
-  await Category.bulkCreate([
-    { name: 'crosscountry' },
-    { name: 'enduro' },
-    { name: 'trail' },
-    { name: 'freeride' }
-  ])
-
-  console.log('Database synced and categories added!')
+  console.log('Database synced!')
 }
 
 syncDatabase().catch(error => {

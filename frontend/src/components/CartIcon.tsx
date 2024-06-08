@@ -46,7 +46,7 @@ const CartIcon: React.FC = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       const token = localStorage.getItem('token')
-      const endpoint = 'http://localhost:8080/cart'
+      const endpoint = '/cart'
 
       if (token) {
         try {
