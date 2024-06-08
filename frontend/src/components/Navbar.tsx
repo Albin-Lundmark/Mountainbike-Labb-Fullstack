@@ -35,7 +35,15 @@ const StyledAppBar = styled(AppBar)<StyledAppBarProps>(
       : 'transparent',
     transition: 'background-color 0.3s ease-in-out',
     boxShadow: isScrolled ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : 'none',
-    minHeight: '18vh'
+    [theme.breakpoints.up('sm')]: {
+      minHeight: '12vh'
+    },
+    [theme.breakpoints.up('md')]: {
+      minHeight: '12vh'
+    },
+    [theme.breakpoints.up('lg')]: {
+      minHeight: '15vh'
+    }
   })
 )
 
@@ -81,21 +89,23 @@ const Navbar: React.FC = () => {
           <Toolbar disableGutters>
             {/* Navigation for mobile */}
             <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+              <IconButton
+                component={CartIcon}
+                sx={{ display: { md: 'none' } }}
+              ></IconButton>
               {/* Logo and site name */}
-              <Typography
-                variant='h6'
-                noWrap
-                component='div'
+              <Box
                 sx={{
-                  ml: { md: 2 },
                   flexGrow: 1,
-                  letterSpacing: '.3rem',
-                  color: 'text.primary',
-                  textDecoration: 'none'
+                  justifyContent: 'center',
+                  alignItems: 'center'
                 }}
               >
                 <Logo />
-              </Typography>
+              </Box>
+              <IconButton>
+                <SearchIcon />
+              </IconButton>
               <Menu
                 id='menu-appbar'
                 anchorEl={anchorElNav}
@@ -116,16 +126,12 @@ const Navbar: React.FC = () => {
               >
                 {pages.map(page => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography variant='inherit'>
-                      <Link
-                        to={`/${page}`}
-                        style={{
-                          textDecoration: 'none',
-                          color: 'text.primary'
-                        }}
-                      >
-                        {page.charAt(0).toUpperCase() + page.slice(1)}
-                      </Link>
+                    <Typography
+                      component={Link}
+                      to={`/${page}`}
+                      sx={{ textDecoration: 'none', color: 'text.primary' }}
+                    >
+                      {page.charAt(0).toUpperCase() + page.slice(1)}
                     </Typography>
                   </MenuItem>
                 ))}
@@ -138,8 +144,7 @@ const Navbar: React.FC = () => {
                 aria-controls='menu-appbar'
                 aria-haspopup='true'
                 onClick={handleOpenNavMenu}
-                color='inherit'
-                sx={{ display: { md: 'none' } }}
+                sx={{ display: { md: 'none' }, color: 'text.primary' }}
               >
                 <MenuIcon />
               </IconButton>

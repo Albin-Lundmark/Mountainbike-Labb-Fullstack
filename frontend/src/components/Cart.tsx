@@ -64,7 +64,7 @@ const Cart: React.FC<CartProps> = ({
       }
     } else {
       const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
-      setCartItems(guestCart)
+      console.log(guestCart)
     }
   }
 
@@ -106,8 +106,8 @@ const Cart: React.FC<CartProps> = ({
           <Container>
             <List>
               {cartItems &&
-                cartItems.map(item => (
-                  <ListItem key={item.id}>
+                cartItems.map((item, index) => (
+                  <ListItem key={index}>
                     <ListItemText
                       primary={item.name}
                       secondary={`Quantity: ${item.quantity} Price: ${item.price} kr`}

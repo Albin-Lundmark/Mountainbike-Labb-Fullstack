@@ -77,24 +77,27 @@ const CartIcon: React.FC = () => {
 
   return (
     <>
-      <IconButton onClick={handleCartClick}>
-        <Badge
-          color='warning'
-          badgeContent={localStorage.getItem('cartItemCount') || '0'}
-        >
+      <Badge
+        color='warning'
+        badgeContent={localStorage.getItem('cartItemCount') || '0'}
+      >
+        <IconButton onClick={handleCartClick}>
           <ShoppingCartIcon />
-        </Badge>
-      </IconButton>
+        </IconButton>
+      </Badge>
       <Cart
         open={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         onPaymentError={handlePaymentError}
         onPaymentSuccess={handlePaymentSuccess}
       />
+      {/* Still haven't figured out how to get this Snackbar to show at all. It is
+      supposed to show an alert if you've completed an order instead of using
+      alert() for it */}
       {createPortal(
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={6000}
+          autoHideDuration={10000}
           onClose={handleCloseSnackbar}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           sx={{

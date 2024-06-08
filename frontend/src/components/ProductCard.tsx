@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import {
+  Alert,
+  AlertProps,
+  Snackbar,
   Card,
   CardActions,
   CardContent,
@@ -28,6 +31,10 @@ const ProductCard: React.FC<CardProps> = ({
   price
 }) => {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [open, setOpen] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertSeverity, setAlertSeverity] =
+    useState<AlertProps['severity']>('success')
   const { setCartItems } = useCart()
 
   const toggleDescription = () => {
@@ -48,7 +55,6 @@ const ProductCard: React.FC<CardProps> = ({
           },
           { headers }
         )
-        console.log(response.data)
         setCartItems(prevItems => [...prevItems, response.data])
       } else {
         const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]')
@@ -56,12 +62,25 @@ const ProductCard: React.FC<CardProps> = ({
         localStorage.setItem('guestCart', JSON.stringify(guestCart))
         setCartItems(prevItems => [...prevItems, guestCart])
       }
-
-      alert(`${name} added to cart!`)
+      setOpen(true)
+      setAlertSeverity('success')
+      setAlertMessage(`${name} added to cart!`)
     } catch (error) {
       console.error('Error adding to cart:', error)
-      alert('Failed to add to cart. Please try again.')
+      setOpen(true)
+      setAlertSeverity('error')
+      setAlertMessage('Failed to add to cart. Please try again.')
     }
+  }
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === 'clickaway') {
+      return
+    }
+    setOpen(false)
   }
 
   const truncatedDescription =
@@ -70,28 +89,58 @@ const ProductCard: React.FC<CardProps> = ({
       : description
 
   return (
-    <Card sx={{ maxWidth: 380, marginBottom: 1.5, borderRadius: 3 }}>
-      <CardMedia component='img' alt={name} height='auto' image={image} />
-      <CardContent>
-        <Typography gutterBottom variant='h5' component='div'>
-          {name}
-        </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          {isExpanded ? description : truncatedDescription}
-        </Typography>
-        <Typography variant='h6' color='text.primary'>
-          {price} kr
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button onClick={toggleDescription} size='small'>
-          {isExpanded ? 'Done reading' : 'Read more '}
-        </Button>
-        <Button size='small' onClick={addToCart}>
-          Add to cart
-        </Button>
-      </CardActions>
-    </Card>
+    <>
+      <Card sx={{ maxWidth: 380, marginBottom: 1.5, borderRadius: 3 }}>
+        <CardMedia component='img' alt={name} height='auto' image={image} />
+        <CardContent>
+          <Typography gutterBottom variant='h5' component='div'>
+            {name}
+          </Typography>
+          <Typography variant='body2' color='text.secondary'>
+            {isExpanded ? description : truncatedDescription}
+          </Typography>
+          <Typography variant='h6' color='text.primary'>
+            {price} kr
+          </Typography>
+        </CardContent>
+        <CardActions>
+          <Button onClick={toggleDescription} size='small'>
+            {isExpanded ? 'Done reading' : 'Read more '}
+          </Button>
+          <Button size='small' onClick={addToCart}>
+            Add to cart
+          </Button>
+        </CardActions>
+      </Card>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        sx={{
+          textAlign: 'center',
+          position: 'fixed',
+          bottom: '16px',
+          left: '50%',
+          width: '80vw',
+          transform: 'translateX(-50%)',
+          zIndex: 9999
+        }}
+      >
+        <Alert
+          variant='filled'
+          onClose={handleClose}
+          severity={alertSeverity}
+          sx={{
+            width: '100%',
+            fontSize: '1.2rem',
+            alignItems: 'center'
+          }}
+        >
+          {alertMessage}
+        </Alert>
+      </Snackbar>
+    </>
   )
 }
 
