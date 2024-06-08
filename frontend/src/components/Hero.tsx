@@ -1,13 +1,13 @@
 import { Button, Grid } from '@mui/material'
 import { Link } from 'react-router-dom'
-import { useMediaQuery, createTheme } from '@mui/material'
-
-const theme = createTheme()
+import { useTheme, useMediaQuery } from '@mui/material'
 
 const Hero: React.FC = () => {
+  const theme = useTheme()
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'))
   const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'))
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const isDarkMode = theme.palette.mode === 'dark'
 
   let imageUrl =
     'https://plus.unsplash.com/premium_photo-1663013202808-618f17b19d95?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
@@ -29,7 +29,9 @@ const Hero: React.FC = () => {
       justifyContent={'center'}
       sx={{
         backgroundImage: `url(${imageUrl})`,
-        borderImage: `fill 0 linear-gradient(#000000c0, #9d9d9d10)`,
+        borderImage: isDarkMode
+          ? 'fill 0 linear-gradient(#000000c0, #9d9d9d10)'
+          : 'fill 0 linear-gradient(#ffffffc0, #ffffff10)',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
