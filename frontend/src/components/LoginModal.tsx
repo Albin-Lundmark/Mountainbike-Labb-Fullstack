@@ -230,17 +230,14 @@ const LoginModal: React.FC = () => {
         </>
       ) : (
         <>
-          <Button
-            variant='text'
-            size='small'
+          <MenuItem
             sx={{
-              cursor: 'pointer',
               color: 'text.primary'
             }}
             onClick={handleLogout}
           >
             Logout
-          </Button>
+          </MenuItem>
         </>
       )}
     </>
