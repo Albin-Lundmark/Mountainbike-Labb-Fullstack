@@ -82,7 +82,17 @@ const Products: React.FC = () => {
   }
 
   return (
-    <Box sx={{ marginTop: '18vh' }}>
+    <Box
+      sx={{
+        marginTop: {
+          xs: '14vh',
+          sm: '17vh',
+          md: '17vh',
+          lg: '18vh',
+          xl: '18vh'
+        }
+      }}
+    >
       <Box
         sx={{
           display: 'flex',

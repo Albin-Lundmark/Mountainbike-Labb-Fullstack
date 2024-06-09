@@ -26,7 +26,7 @@ const Hero: React.FC = () => {
   return (
     <Grid
       container
-      justifyContent={'center'}
+      justifyContent='center'
       sx={{
         backgroundImage: `url(${imageUrl})`,
         borderImage: isDarkMode

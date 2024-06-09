@@ -64,13 +64,20 @@ const Navbar: React.FC = () => {
         <Container maxWidth='xl'>
           <Toolbar disableGutters>
             {/* Navigation for mobile */}
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none' },
+                alignItems: 'center'
+              }}
+            >
               <IconButton sx={{ display: { md: 'none', lg: 'none' } }}>
                 <CartIcon />
               </IconButton>
-              {/* Logo and site name */}
+              {/* Logo */}
               <Box
                 sx={{
+                  display: { md: 'none', lg: 'none' },
                   flexGrow: 1,
                   justifyContent: 'center',
                   alignItems: 'center'
@@ -126,8 +133,12 @@ const Navbar: React.FC = () => {
             </Box>
 
             {/* Navigation for desktop */}
-            <Box sx={{ display: 'flex' }}>
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box
+              justifyContent='space-evenly'
+              alignItems='center'
+              sx={{ width: '100%', display: { xs: 'none', md: 'flex' } }}
+            >
+              <Box>
                 {pages.map(page => (
                   <Button
                     key={page}
@@ -138,7 +149,13 @@ const Navbar: React.FC = () => {
                     {page.charAt(0).toUpperCase() + page.slice(1)}
                   </Button>
                 ))}
-                {/* Action buttons */}
+              </Box>
+
+              {/* Logo */}
+              <Logo />
+
+              {/* Action buttons */}
+              <Box display='flex' alignItems='center'>
                 <IconButton sx={{ mx: 1, color: 'text.primary' }}>
                   <SearchIcon />
                 </IconButton>
@@ -160,20 +177,15 @@ const Navbar: React.FC = () => {
                 sx={{ mt: '45px' }}
                 id='menu-appbar'
                 anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <LoginModal />
-                <Toggledarkmode />
+                <MenuItem>
+                  <LoginModal />
+                </MenuItem>
+                <MenuItem>
+                  <Toggledarkmode />
+                </MenuItem>
               </Menu>
             </Box>
           </Toolbar>
