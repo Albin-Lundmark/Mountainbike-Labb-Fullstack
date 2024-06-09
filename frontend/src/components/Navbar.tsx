@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
 
             {/* Navigation for desktop */}
             <Box
-              justifyContent='space-evenly'
+              justifyContent='space-between'
               alignItems='center'
               sx={{ width: '100%', display: { xs: 'none', md: 'flex' } }}
             >

@@ -41,12 +41,13 @@ const Home: React.FC = () => {
         container
         justifyContent='center'
         alignItems='center'
+        maxWidth='1300px'
         mt={1}
         spacing={4}
-        sx={{ margin: 'auto' }}
+        sx={{ mx: 'auto' }}
       >
         {products.map((product, index) => (
-          <Grid item key={index} xs={12} mx={1}>
+          <Grid justifyContent='center' item key={index} xs={12} mx={1}>
             <AdCard
               title={product.title}
               description={product.description}

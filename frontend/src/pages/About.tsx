@@ -57,44 +57,48 @@ const About: React.FC = () => {
       }}
     >
       <Box my={4}>
-        <Typography variant='h2' gutterBottom>
-          About Us
-        </Typography>
-        <Grid container spacing={4}>
-          {aboutSections.map((section, index) => (
-            <Grid
-              key={index}
-              container
-              item
-              spacing={4}
-              direction={index % 2 === 0 ? 'row' : 'row-reverse'}
-              md
-              alignItems='center'
-            >
-              {/* Text */}
-              <Grid item xs={12} md={6}>
-                <Box textAlign='center' px={2}>
-                  <Typography variant='h5' gutterBottom>
-                    {section.title}
-                  </Typography>
-                  <Typography variant='body1' paragraph>
-                    {section.description}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <CardMedia
-                    component='img'
-                    height='300'
-                    image={section.imageUrl}
-                    alt={section.alt}
-                  />
-                </Card>
-              </Grid>
+        {aboutSections.map((section, index) => (
+          <Grid
+            key={index}
+            container
+            spacing={4}
+            direction={{
+              xs: 'column',
+              md: index % 2 === 0 ? 'row' : 'row-reverse'
+            }}
+            alignItems='center'
+          >
+            <Grid item xs={12} md={6}>
+              <Card>
+                <CardMedia
+                  component='img'
+                  height='380'
+                  image={section.imageUrl}
+                  alt={section.alt}
+                />
+              </Card>
             </Grid>
-          ))}
-        </Grid>
+            <Grid item xs={12} md={6}>
+              <Box
+                textAlign={{
+                  xs: 'center',
+                  md: 'left'
+                }}
+              >
+                <Typography
+                  textAlign={{ md: 'center' }}
+                  variant='h5'
+                  gutterBottom
+                >
+                  {section.title}
+                </Typography>
+                <Typography variant='body1' paragraph>
+                  {section.description}
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        ))}
       </Box>
     </Box>
   )
