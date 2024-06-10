@@ -180,12 +180,8 @@ const Navbar: React.FC = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <MenuItem>
-                  <LoginModal />
-                </MenuItem>
-                <MenuItem>
-                  <Toggledarkmode />
-                </MenuItem>
+                <LoginModal />
+                <Toggledarkmode />
               </Menu>
             </Box>
           </Toolbar>
